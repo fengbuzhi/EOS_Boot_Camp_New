@@ -1,1 +1,0 @@
-Reference material: https://developers.eos.io/eosio-home/docs/sending-an-inline-transaction-to-external-contract

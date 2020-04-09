@@ -1,4 +1,5 @@
-# VT Blockchain Bootcamp Starter Kit
+This is the new repo for the EOS Boot Camp
 
-This repository contains the example addressbook contract as well as a simple frontend demonstrating the use of eosjs.
+Owners: Weicheng Xue, Zejia Jing and Aanuoluwapo Ojelade
 
+Creation Date: 04/09/2020
