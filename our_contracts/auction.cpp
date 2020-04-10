@@ -9,6 +9,8 @@
 */
 #include <eosiolib/eosio.hpp>
 
+using namespace eosio;
+
 class auction : public eosio::contract
 {
 
