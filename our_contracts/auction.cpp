@@ -17,14 +17,15 @@ class auction : public eosio::contract
 public:
 
       //Constructor
-      auction(name s): contract(s), _bids(s, 0) {}
+      auction(name s, name code, datastream<const char*> ds): _bids(s,0), contract(s, code, ds) {}
 
       //Get 1st and 2nd bids
+      [[eosio::action]]
       void sync()
       {
             _hb1 = 0;
             _hb2 = 0;
-            _winner = 0;
+            //_winner = "Weicheng";
 
             //Get highest
             for(auto it = _bids.begin(); it != _bids.end(); ++it)
@@ -48,6 +49,7 @@ public:
       }
 
       //Places a bid
+      [[eosio::action]]
       void placebid(name owner, int64_t bid)
       {
             require_auth(owner);
@@ -89,6 +91,7 @@ public:
       }
 
       //Who was the winner / who is the current winner?
+      [[eosio::action]]
       void getwinner(name owner)
       {
             require_auth(owner);
@@ -97,6 +100,7 @@ public:
       }
       
       //Dump memory (all bids and addresses)
+      [[eosio::action]]
       void getbids(name owner)
       {
             require_auth(owner);
@@ -110,7 +114,7 @@ private:
       uint64_t _hb1;
       name _winner;
       
-      struct record
+      struct [[eosio::table]] record
       {
             name owner;
             int64_t bid;
@@ -122,4 +126,5 @@ private:
 
 };
 
-EOSIO_ABI(auction, (placebid)(getwinner)(getbids))
+//EOSIO_ABI(auction, (placebid)(getwinner)(getbids))
+
