@@ -15,7 +15,7 @@ class auction : public eosio::contract
 public:
 
       //Constructor
-      auction(account_name s): contract(s), _bids(s, 0) {}
+      auction(name s): contract(s), _bids(s, 0) {}
 
       //Get 1st and 2nd bids
       void sync()
@@ -46,7 +46,7 @@ public:
       }
 
       //Places a bid
-      void placebid(account_name owner, int64_t bid)
+      void placebid(name owner, int64_t bid)
       {
             require_auth(owner);
             
@@ -87,7 +87,7 @@ public:
       }
 
       //Who was the winner / who is the current winner?
-      void getwinner(account_name owner)
+      void getwinner(name owner)
       {
             require_auth(owner);
             sync();
@@ -95,7 +95,7 @@ public:
       }
       
       //Dump memory (all bids and addresses)
-      void getbids(account_name owner)
+      void getbids(name owner)
       {
             require_auth(owner);
             for(auto it = _bids.begin(); it != _bids.end(); ++it)
@@ -106,16 +106,16 @@ private:
 
       uint64_t _hb2;
       uint64_t _hb1;
-      account_name _winner;
+      name _winner;
       
       struct record
       {
-            account_name owner;
+            name owner;
             int64_t bid;
             uint64_t primary_key() const{return bid;}
       };
 
-      typedef eosio::multi_index<N(records), record> bids_table;
+      typedef eosio::multi_index<"records"_n, record> bids_table;
       bids_table _bids;
 
 };
