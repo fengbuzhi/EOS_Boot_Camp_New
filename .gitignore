@@ -15,6 +15,10 @@ frontend/build
 #blockchain data
 **/data/*
 
+#swap files
+*.swp
+*/*.swp
+
 # misc
 .DS_Store
 .env.local
