@@ -25,7 +25,8 @@ public:
       {
             _hb1 = 0;
             _hb2 = 0;
-            //_winner = "Weicheng";
+            //_winner1 = "Weicheng";
+            //_winner2 = "Weicheng";
 
             //Get highest
             for(auto it = _bids.begin(); it != _bids.end(); ++it)
@@ -33,7 +34,7 @@ public:
                   if(it->bid > _hb1)
                   {
                         _hb1 = it->bid;
-                        _winner = it->owner;
+                        _winner1 = it->owner;
                   }
             }
 
@@ -43,7 +44,7 @@ public:
                   if(it->bid > _hb2 && it->bid != _hb1)
                   {
                         _hb2 = it->bid;
-                        _winner = it->owner;
+                        _winner2 = it->owner;
                   }
             }
       }
@@ -90,13 +91,13 @@ public:
             });
       }
 
-      //Who was the winner / who is the current winner?
+      //Who were the winners / who are the current winners?
       [[eosio::action]]
-      void getwinner(name owner)
+      void getwinners(name owner)
       {
             require_auth(owner);
             sync();
-            eosio::print("The winning address: ", _winner, " : Highest Bid: ", _hb1, " : Second Highest Bid: ", _hb2);
+            eosio::print("The winning address: ", _winner1, " : Highest Bid: ", _hb1, " : Second Highest Bid: ", _hb2);
       }
       
       //Dump memory (all bids and addresses)
@@ -112,7 +113,8 @@ private:
 
       uint64_t _hb2;
       uint64_t _hb1;
-      name _winner;
+      name _winner1;
+      name _winner2;
       
       struct [[eosio::table]] record
       {
