@@ -1,12 +1,3 @@
-// Now this code is taken from https://github.com/mrbid/EOSIO-AUCTIONS/blob/master/contour_public.cpp, just for test purpose.
-// We can setup our bidding system based on this work, but with improvments
-
-
-/*
-      1st & 2nd price auction model smart contract for EOS
-      By James William Fletcher (~2018)
-      http://github.com/mrbid
-*/
 #include <eosiolib/eosio.hpp>
 
 using namespace eosio;
@@ -16,35 +7,37 @@ class auction : public eosio::contract
 
 public:
 
+      //FIXME: move it to another file
+      //# of winners
+      uint64_t N = 3;
+
       //Constructor
       auction(name s, name code, datastream<const char*> ds): _bids(s,0), contract(s, code, ds) {}
 
-      //Get 1st and 2nd bids
+      //Calculate winners
       [[eosio::action]]
-      void sync()
+      void calculate_winners()
       {
-            _hb1 = 0;
-            _hb2 = 0;
-            //_winner1 = "Weicheng";
-            //_winner2 = "Weicheng";
+	    winners_price = 0;
+	    winners = "";
 
             //Get highest
-            for(auto it = _bids.begin(); it != _bids.end(); ++it)
+            for(auto iterator = _bids.begin(); iterator != _bids.end(); ++iterator)
             {
-                  if(it->bid > _hb1)
+                  if(iterator.bid > hb1)
                   {
-                        _hb1 = it->bid;
-                        _winner1 = it->owner;
+                        hb1 = iterator.bid;
+                        winner1 = iterator.owner;
                   }
             }
 
-            //Get second highest
-            for(auto it = _bids.begin(); it != _bids.end(); ++it)
+            //Sort the list first
+            for(auto iterator = _bids.begin(); iterator != _bids.end(); ++iterator)
             {
-                  if(it->bid > _hb2 && it->bid != _hb1)
+                  if(iterator.bid > hb2 && iterator.bid != hb1)
                   {
-                        _hb2 = it->bid;
-                        _winner2 = it->owner;
+                        hb2 = iterator.bid;
+                        winner2 = iterator.owner;
                   }
             }
       }
@@ -56,30 +49,30 @@ public:
             require_auth(owner);
             
             //Sync local variables from persistent storage
-            sync();
+            calculate_winners();
 
             //Is this bid high enough? 
-            if(_hb1 >= bid)
+            if(hb1 >= bid)
             {
-                  eosio::print("Your bid is too low, it's outbid. : Highest Bid: ", _hb1, " : Second Highest Bid: ", _hb2);
+                  eosio::print("Your bid is too low, it's outbid. : Highest Bid: ", hb1, " : Second Highest Bid: ", hb2);
                   return;
             }
 
             //Set new highest bid (and last highest)
-            _hb2 = _hb1;
-            _hb1 = bid;
+            hb2 = hb1;
+            hb1 = bid;
 
-            //If record exists delete it
-            for(auto it = _bids.begin(); it != _bids.end();)
+            //If record exists delete iterator
+            for(auto iterator = _bids.begin(); iterator != _bids.end();)
             {
-                  if(it->owner == owner)
+                  if(it.owner == owner)
                   {   
-                        _bids.erase(it);
+                        _bids.erase(iterator);
                         break;
                   }
                   else
                   {
-                        ++it;
+                        ++iterator;
                   }       
             }    
 
@@ -97,7 +90,7 @@ public:
       {
             require_auth(owner);
             sync();
-            eosio::print("The winning address: ", _winner1, " : Highest Bid: ", _hb1, " : Second Highest Bid: ", _hb2);
+            eosio::print("The winning address: ", winner1, " : Highest Bid: ", hb1, " : Second Highest Bid: ", hb2);
       }
       
       //Dump memory (all bids and addresses)
@@ -105,28 +98,28 @@ public:
       void getbids(name owner)
       {
             require_auth(owner);
-            for(auto it = _bids.begin(); it != _bids.end(); ++it)
-                  eosio::print("Address: ", it->owner, " - Bid:", it->bid, " : ");
+            for(auto iterator = _bids.begin(); iterator != _bids.end(); ++iterator)
+                  eosio::print("Address: ", iterator.owner, " - Bid:", iterator.bid, " : ");
       }
 
 private:
 
-      uint64_t _hb2;
-      uint64_t _hb1;
-      name _winner1;
-      name _winner2;
+      uint64_t winners_price[N];
+      name winners[N];
       
-      struct [[eosio::table]] record
+      struct [[eosio::table]] person
       {
-            name owner;
-            int64_t bid;
-            uint64_t primary_key() const{return bid;}
+            name student_id;
+	    std::string first_name;
+	    std::string last_name;
+            uint64_t bid_price;
+	    uint64_t rank;
+            uint64_t primary_key() const{ return bid_price; }
       };
 
-      typedef eosio::multi_index<"records"_n, record> bids_table;
-      bids_table _bids;
+      typedef eosio::multi_index<"people"_n, person> price_index;
+      price_index price_records;
 
 };
 
-//EOSIO_ABI(auction, (placebid)(getwinner)(getbids))
 
