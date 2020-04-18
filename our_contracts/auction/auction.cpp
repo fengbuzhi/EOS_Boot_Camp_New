@@ -8,7 +8,7 @@ class auction : public eosio::contract
 public:
 
   //FIXME: move it to another file
-  //# of winners (as the total # of ticket is a finite number)
+  //# of winners (equal to the number of football tickets)
   uint64_t N = 3;
 
   //Constructor
@@ -23,18 +23,20 @@ public:
     last_winner_price = 0;
     winners = "VT";
 
+    //FIXME: Comment it since not sure of whether it works
     //Sort the list first
-    auto m = bid_records.get_index();
+    //auto m = bid_records.get_index();
 
     //FIXME: Now it just finds the N lowest bid price
     //Get the N best/highest bid prices
     uint64_t i = 0;
-    for(auto &iterator : m)
+    for(auto& iterator : bid_records)
     {
       if (i<N)
       {
         winners_price[i] = iterator.bid_price;
-	last_winner_price = winners_price[i]
+	//Update last winner price every time
+	last_winner_price = winners_price[i];
 	winners[i] = iterator.student_name;
 	i++;
       }
@@ -53,28 +55,29 @@ public:
     
     //Get the last winner price
     uint64_t last_winner_price = 0;
-    calculate_winners( last_winner_price );
+    calculate_winners();
 
     //If the present bid price is too low, return 
-    if(last_winner_price >= bid)
+    if(last_winner_price >= bid_price)
     {
-      print("Sorry, your bid cannot be accepted. You need to bid at the price of", ceil(1.1*lat_winner_price), " or higher. Thanks!");
+      print("Sorry, your bid cannot be accepted. You need to bid at the price of ", ceil(1.1*lat_winner_price), " or higher. Thanks!");
       return;
     }
 
-    //FIXME: The primary key is the bid_price, and here it uses student_name. Not sure whether it works or not
-    auto iterator = bid_records.find(student_name)
+    //FIXME: Now it should use the student_id to search, but here it uses bid_price, which is the primary key.
+    auto iterator = bid_records.find(bid_price)
     if ( iterator == bid_records.end() )
     {
       bid_records.emplace(user, [&]( auto& row ) {
-	row.name = user;
+	row.student_name = user;
 	row.student_id = student_id;
 	row.bid_price = bid_price;
       });
     }
-    else {
-      bid_records.modify(iterator, user, [&]( auto& row ){
-	row.name = user;
+    else
+    {
+      bid_records.modify(iterator, user, [&]( auto& row ) {
+	row.student_name = user;
         row.student_id = student_id;
 	row.bid_price = bid_price;
       }
@@ -88,7 +91,7 @@ public:
     require_auth(user);
     calculate_winners();
     for(auto i = 0; i != N; i++)
-      print("The winning's name: ", winners[i], ", bid price: ", winners_price[i]);
+      print("The winner's name: ", winners[i], ", bid price: ", winners_price[i]);
   }
   
   //Print all bid prices
@@ -97,13 +100,13 @@ public:
   {
     require_auth(user);
     for(auto iterator = bid_records.begin(); iterator != bid_records.end(); ++iterator)
-      print("The bidder's name: ", iterator.name, ", bid price: ", iterator.bid_price);
+      print("The bidder's name: ", iterator.student_name, ", bid price: ", iterator.bid_price);
   }
 
 private:
 
   uint64_t winners_price[N];
-  uint64_t last_winner_price
+  uint64_t last_winner_price;
   name winners[N];
   
   struct [[eosio::table]] person
