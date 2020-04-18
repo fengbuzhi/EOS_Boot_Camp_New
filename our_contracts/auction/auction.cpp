@@ -1,5 +1,5 @@
 #include <math.h>
-#include <eosiolib/eosio.hpp>
+#include <eosio/eosio.hpp>
 //FIXME: move it to another file
 //# of winners (equal to the number of football tickets)
 #define N 3
@@ -87,8 +87,9 @@ public:
   {
     require_auth(user);
     calwinners();
-    for(auto i = 0; i != N; i++)
+    for(auto i = 0; i != N; i++){
       print("The winner's name: ", winners[i], ", bid price: ", winners_price[i]);
+    }
   }
   
   //Print all bid prices
@@ -121,5 +122,6 @@ private:
   bid_index bid_records;
 
 };
+
 
 
