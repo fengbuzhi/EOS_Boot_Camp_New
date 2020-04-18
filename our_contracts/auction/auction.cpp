@@ -1,5 +1,6 @@
 #include <math.h>
 #include <eosio/eosio.hpp>
+#include <eosio/print.hpp>
 //FIXME: move it to another file
 //# of winners (equal to the number of football tickets)
 #define N 3
@@ -20,14 +21,13 @@ public:
   void calwinners( )
   {
 
-    //FIXME: Comment it since not sure of whether it works
-    //Sort the list first
-    //auto m = bid_records.get_index();
+    //Sort the list in descending order
+    auto pridx = bid_records.get_index<"byauxi"_n>();
 
     //FIXME: Now it just finds the N lowest bid price
     //Get the N best/highest bid prices
     uint64_t i = 0;
-    for(auto& iterator : bid_records)
+    for(auto& iterator : pridx)
     {
       if (i<N)
       {
@@ -51,7 +51,7 @@ public:
     require_auth(user);
     
     //Get the last winner price
-    uint64_t last_winner_price = 0;
+    int64_t last_winner_price = 0;
     calwinners();
 
     //If the present bid price is too low, return 
@@ -69,6 +69,8 @@ public:
 	row.user_name = user;
 	row.user_id = user_id;
 	row.bid_price = bid_price;
+    //limit the bid price to be less than 10000
+	row.auxi_price = 10000-bid_price;
       });
     }
     else
@@ -77,6 +79,8 @@ public:
 	row.user_name = user;
         row.user_id = user_id;
 	row.bid_price = bid_price;
+    //limit the bid price to be less than 10000   
+	row.auxi_price = -bid_price;
       });
     }
   }
@@ -103,8 +107,8 @@ public:
 
 private:
 
-  uint64_t winners_price[N] = {0};
-  uint64_t last_winner_price = {0};
+  int64_t winners_price[N] = {0};
+  int64_t last_winner_price = {0};
   name winners[N];
   //name winners[N] = {"VT"};
   
@@ -113,15 +117,17 @@ private:
     name user_name;
     int64_t user_id;
     uint64_t bid_price;
-    uint64_t primary_key() const{ return bid_price; }
+    //Use auxi_price to sort the table in desceding order
+    uint64_t auxi_price;
+    int64_t primary_key() const{ return bid_price; };
+    uint64_t get_name() const{ return user_name.value; };
+    uint64_t get_auxi() const{ return auxi_price; };
   };
 
   typedef eosio::multi_index<
-    "people"_n, person
+    "people"_n, person, 
+    indexed_by<"byname"_n, const_mem_fun<person, uint64_t, &person::get_name>>,
+    indexed_by<"byauxi"_n, const_mem_fun<person, uint64_t, &person::get_auxi>>
     > bid_index;
   bid_index bid_records;
-
 };
-
-
-
