@@ -37,7 +37,7 @@ public:
         winners_price[i] = iterator.bid_price;
 	//Update last winner price every time
 	last_winner_price = winners_price[i];
-	winners[i] = iterator.student_name;
+	winners[i] = iterator.user_name;
 	i++;
       }
       else
@@ -49,7 +49,7 @@ public:
 
   //Places a bid
   [[eosio::action]]
-  void placebid(name user, long int student_id, uint64_t bid_price)
+  void placebid(name user, long int user_id, uint64_t bid_price)
   {
     require_auth(user);
     
@@ -64,21 +64,21 @@ public:
       return;
     }
 
-    //FIXME: Now it should use the student_id to search, but here it uses bid_price, which is the primary key.
+    //FIXME: Now it should use the user_id to search, but here it uses bid_price, which is the primary key.
     auto iterator = bid_records.find(bid_price)
     if ( iterator == bid_records.end() )
     {
       bid_records.emplace(user, [&]( auto& row ) {
-	row.student_name = user;
-	row.student_id = student_id;
+	row.user_name = user;
+	row.user_id = user_id;
 	row.bid_price = bid_price;
       });
     }
     else
     {
       bid_records.modify(iterator, user, [&]( auto& row ) {
-	row.student_name = user;
-        row.student_id = student_id;
+	row.user_name = user;
+        row.user_id = user_id;
 	row.bid_price = bid_price;
       }
     }
@@ -100,7 +100,7 @@ public:
   {
     require_auth(user);
     for(auto iterator = bid_records.begin(); iterator != bid_records.end(); ++iterator)
-      print("The bidder's name: ", iterator.student_name, ", bid price: ", iterator.bid_price);
+      print("The bidder's name: ", iterator.user_name, ", bid price: ", iterator.bid_price);
   }
 
 private:
@@ -111,8 +111,8 @@ private:
   
   struct [[eosio::table]] person
   {
-    name student_name;
-    long int student_id;
+    name user_name;
+    long int user_id;
     uint64_t bid_price;
     uint64_t primary_key() const{ return bid_price; }
   };
