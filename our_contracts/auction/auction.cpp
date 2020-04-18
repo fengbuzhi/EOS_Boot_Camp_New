@@ -80,7 +80,7 @@ public:
         row.user_id = user_id;
 	row.bid_price = bid_price;
     //limit the bid price to be less than 10000   
-	row.auxi_price = -bid_price;
+	row.auxi_price = 10000-bid_price;
       });
     }
   }
