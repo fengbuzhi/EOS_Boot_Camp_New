@@ -7,118 +7,117 @@ class auction : public eosio::contract
 
 public:
 
-      //FIXME: move it to another file
-      //# of winners
-      uint64_t N = 3;
+  //FIXME: move it to another file
+  //# of winners (as the total # of ticket is a finite number)
+  uint64_t N = 3;
 
-      //Constructor
-      auction(name s, name code, datastream<const char*> ds): _bids(s,0), contract(s, code, ds) {}
+  //Constructor
+  auction(name s, name code, datastream<const char*> ds): _bids(s,0), contract(s, code, ds) {}
 
-      //Calculate winners
-      [[eosio::action]]
-      void calculate_winners()
+  //Calculate winners
+  [[eosio::action]]
+  void calculate_winners( )
+  {
+    //Initialization
+    winners_price = 0;
+    last_winner_price = 0;
+    winners = "VT";
+
+    //Sort the list first
+    auto m = bid_records.get_index();
+
+    //FIXME: Now it just finds the N lowest bid price
+    //Get the N best/highest bid prices
+    uint64_t i = 0;
+    for(auto &iterator : m)
+    {
+      if (i<N)
       {
-	    winners_price = 0;
-	    winners = "";
-
-            //Get highest
-            for(auto iterator = _bids.begin(); iterator != _bids.end(); ++iterator)
-            {
-                  if(iterator.bid > hb1)
-                  {
-                        hb1 = iterator.bid;
-                        winner1 = iterator.owner;
-                  }
-            }
-
-            //Sort the list first
-            for(auto iterator = _bids.begin(); iterator != _bids.end(); ++iterator)
-            {
-                  if(iterator.bid > hb2 && iterator.bid != hb1)
-                  {
-                        hb2 = iterator.bid;
-                        winner2 = iterator.owner;
-                  }
-            }
+        winners_price[i] = iterator.bid_price;
+	last_winner_price = winners_price[i]
+	winners[i] = iterator.student_name;
+	i++;
       }
-
-      //Places a bid
-      [[eosio::action]]
-      void placebid(name owner, int64_t bid)
+      else
       {
-            require_auth(owner);
-            
-            //Sync local variables from persistent storage
-            calculate_winners();
-
-            //Is this bid high enough? 
-            if(hb1 >= bid)
-            {
-                  eosio::print("Your bid is too low, it's outbid. : Highest Bid: ", hb1, " : Second Highest Bid: ", hb2);
-                  return;
-            }
-
-            //Set new highest bid (and last highest)
-            hb2 = hb1;
-            hb1 = bid;
-
-            //If record exists delete iterator
-            for(auto iterator = _bids.begin(); iterator != _bids.end();)
-            {
-                  if(it.owner == owner)
-                  {   
-                        _bids.erase(iterator);
-                        break;
-                  }
-                  else
-                  {
-                        ++iterator;
-                  }       
-            }    
-
-            //Create new bid record
-            _bids.emplace(owner, [&](auto& rcrd)
-            {
-                  rcrd.owner = owner;
-                  rcrd.bid = bid;
-            });
+	break;
       }
+    }
+  }
 
-      //Who were the winners / who are the current winners?
-      [[eosio::action]]
-      void getwinners(name owner)
-      {
-            require_auth(owner);
-            sync();
-            eosio::print("The winning address: ", winner1, " : Highest Bid: ", hb1, " : Second Highest Bid: ", hb2);
+  //Places a bid
+  [[eosio::action]]
+  void placebid(name user, long int student_id, uint64_t bid_price)
+  {
+    require_auth(user);
+    
+    //Get the last winner price
+    uint64_t last_winner_price = 0;
+    calculate_winners( last_winner_price );
+
+    //If the present bid price is too low, return 
+    if(last_winner_price >= bid)
+    {
+      print("Sorry, your bid cannot be accepted. You need to bid at the price of", ceil(1.1*lat_winner_price), " or higher. Thanks!");
+      return;
+    }
+
+    //FIXME: The primary key is the bid_price, and here it uses student_name. Not sure whether it works or not
+    auto iterator = bid_records.find(student_name)
+    if ( iterator == bid_records.end() )
+    {
+      bid_records.emplace(user, [&]( auto& row ) {
+	row.name = user;
+	row.student_id = student_id;
+	row.bid_price = bid_price;
+      });
+    }
+    else {
+      bid_records.modify(iterator, user, [&]( auto& row ){
+	row.name = user;
+        row.student_id = student_id;
+	row.bid_price = bid_price;
       }
-      
-      //Dump memory (all bids and addresses)
-      [[eosio::action]]
-      void getbids(name owner)
-      {
-            require_auth(owner);
-            for(auto iterator = _bids.begin(); iterator != _bids.end(); ++iterator)
-                  eosio::print("Address: ", iterator.owner, " - Bid:", iterator.bid, " : ");
-      }
+    }
+  }
+
+  //Print winners
+  [[eosio::action]]
+  void printwinners(name user)
+  {
+    require_auth(user);
+    calculate_winners();
+    for(auto i = 0; i != N; i++)
+      print("The winning's name: ", winners[i], ", bid price: ", winners_price[i]);
+  }
+  
+  //Print all bid prices
+  [[eosio::action]]
+  void printbids(name user)
+  {
+    require_auth(user);
+    for(auto iterator = bid_records.begin(); iterator != bid_records.end(); ++iterator)
+      print("The bidder's name: ", iterator.name, ", bid price: ", iterator.bid_price);
+  }
 
 private:
 
-      uint64_t winners_price[N];
-      name winners[N];
-      
-      struct [[eosio::table]] person
-      {
-            name student_id;
-	    std::string first_name;
-	    std::string last_name;
-            uint64_t bid_price;
-	    uint64_t rank;
-            uint64_t primary_key() const{ return bid_price; }
-      };
+  uint64_t winners_price[N];
+  uint64_t last_winner_price
+  name winners[N];
+  
+  struct [[eosio::table]] person
+  {
+    name student_name;
+    long int student_id;
+    uint64_t bid_price;
+    uint64_t primary_key() const{ return bid_price; }
+  };
 
-      typedef eosio::multi_index<"people"_n, person> price_index;
-      price_index price_records;
+  typedef eosio::multi_index<
+    "people"_n, person
+    > bid_index;
+  bid_index bid_records;
 
 };
 
