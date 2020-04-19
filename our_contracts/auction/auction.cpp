@@ -3,7 +3,7 @@
 #include <eosio/print.hpp>
 //FIXME: move it to another file or change it to an input
 //# of winners (equal to the number of vailable football tickets for bidding)
-#define N 3
+#include <auction.h>
 
 
 using namespace eosio;
