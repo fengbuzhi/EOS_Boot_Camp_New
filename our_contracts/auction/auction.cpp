@@ -104,7 +104,7 @@ public:
     //Sort the list in descending order
     auto pridx = bid_records.get_index<"byauxi"_n>();
 
-    auto indx = 0;
+    auto indx = 1;
     for(auto& iterator : pridx)
       print_f("{bidder %}:{name: %, bid_price: %} | ", indx++, iterator.user_name, iterator.bid_price);
   }
