@@ -61,7 +61,7 @@ public:
     }
 
     //FIXME: Now it should use the user_id to search, but here it uses bid_price, which is the primary key.
-    auto iterator = bid_records.find(bid_price);
+    auto iterator = bid_records.find(user.value);
     if ( iterator == bid_records.end() )
     {
       bid_records.emplace(user, [&]( auto& row ) {
@@ -124,14 +124,14 @@ private:
     uint64_t bid_price;
     //Use auxi_price to sort the table in desceding order
     uint64_t auxi_price;
-    int64_t primary_key() const{ return bid_price; };
-    uint64_t get_name() const{ return user_name.value; };
+    int64_t primary_key() const{ return user_name.value; };
+    uint64_t get_price() const{ return bid_price; };
     uint64_t get_auxi() const{ return auxi_price; };
   };
 
   typedef eosio::multi_index<
     "people"_n, person, 
-    indexed_by<"byname"_n, const_mem_fun<person, uint64_t, &person::get_name>>,
+    indexed_by<"byprice"_n, const_mem_fun<person, uint64_t, &person::get_price>>,
     indexed_by<"byauxi"_n, const_mem_fun<person, uint64_t, &person::get_auxi>>
     > bid_index;
   bid_index bid_records;
