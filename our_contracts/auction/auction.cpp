@@ -1,8 +1,8 @@
 #include <math.h>
 #include <eosio/eosio.hpp>
 #include <eosio/print.hpp>
-//FIXME: move it to another file
-//# of winners (equal to the number of football tickets)
+//FIXME: move it to another file or change it to an input
+//# of winners (equal to the number of vailable football tickets for bidding)
 #define N 3
 
 
@@ -24,7 +24,6 @@ public:
     //Sort the list in descending order
     auto pridx = bid_records.get_index<"byauxi"_n>();
 
-    //FIXME: Now it just finds the N lowest bid price
     //Get the N best/highest bid prices
     uint64_t i = 0;
     for(auto& iterator : pridx)
@@ -50,8 +49,9 @@ public:
   {
     require_auth(user);
     
-    //Get the last winner price
+    //Initialize the last winner price
     last_winner_price = 0;
+    //Calculate the N top bid prices and bidders at present
     calwinners();
 
     //If the present bid price is too low, return 
@@ -92,7 +92,7 @@ public:
     require_auth(user);
     calwinners();
     for(auto i = 0; i != N; i++){
-      print("The winner's name: ", winners[i], ", bid price: ", winners_price[i]);
+      print_f("{winner %}:{name: %, bid_price: %} | ", i+1, winners[i], winners_price[i]);
     }
   }
   
@@ -101,8 +101,13 @@ public:
   void printbids(name user)
   {
     require_auth(user);
-    for(auto iterator = bid_records.begin(); iterator != bid_records.end(); ++iterator)
-      print("The bidder's name: ", iterator->user_name, ", bid price: ", iterator->bid_price);
+
+    //Sort the list in descending order
+    auto pridx = bid_records.get_index<"byauxi"_n>();
+
+    auto indx = 0;
+    for(auto& iterator : pridx)
+      print_f("{bidder %}:{name: %, bid_price: %} | ", indx++, iterator.user_name, iterator.bid_price);
   }
 
 private:
