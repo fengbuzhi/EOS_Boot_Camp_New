@@ -26,22 +26,19 @@ CONTRACT tradeticket : public eosio::contract {
     struct permission_level_weight {
        eosio::permission_level  permission;
        uint16_t          weight;
-       // explicit serialization macro is not necessary, used here only to improve compilation time
-       // EOSLIB_SERIALIZE( permission_level_weight, (permission)(weight) )
+
     };
 
     struct wait_weight {
        uint32_t           wait_sec;
        uint16_t           weight;
-       // explicit serialization macro is not necessary, used here only to improve compilation time
-       // EOSLIB_SERIALIZE( wait_weight, (wait_sec)(weight) )
+
     };
 
    struct key_weight {
       eosio::public_key  key;
       uint16_t           weight;
-      // explicit serialization macro is not necessary, used here only to improve compilation time
-      // EOSLIB_SERIALIZE( key_weight, (key)(weight) )
+
    };
 
     struct authority {
@@ -49,8 +46,7 @@ CONTRACT tradeticket : public eosio::contract {
        std::vector<key_weight>               keys;
        std::vector<permission_level_weight>  accounts;
        std::vector<wait_weight>              waits;
-       // explicit serialization macro is not necessary, used here only to improve compilation time
-       // EOSLIB_SERIALIZE( authority, (threshold)(keys)(accounts)(waits) )
+
     };
 
     /****************************************************************************
@@ -256,22 +252,3 @@ CONTRACT tradeticket : public eosio::contract {
 
 // specify the contract name, and export a public action: update
 EOSIO_DISPATCH( tradeticket, (hello)(regaccount)(sellaccount)(buyaccount)(giveauth) )
-
-/*extern "C" {
-  void apply( uint64_t receiver, uint64_t code, uint64_t action ) {
-    // tradeticket _accountmaker(receiver);
-    //auto self = receiver;
-
-    if( code==receiver && action== name("hello").value ) {
-      execute_action( name(receiver), name(code), &tradeticket::hello );
-    }
-    else if(code==receiver && action== name("deposit").value) {
-      execute_action(name(receiver), name(code), &tradeticket::deposit );
-    }
-    else if(code==receiver && action== name("giveauth").value) {
-      execute_action(name(receiver), name(code), &tradeticket::giveauth );
-    }
-
-  }
-};
-*/
