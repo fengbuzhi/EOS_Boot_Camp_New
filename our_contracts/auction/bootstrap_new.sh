@@ -2,7 +2,9 @@
 
 Public_key=EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
 
-N=10 # Number of accounts
+Name="user"
+
+N=5 # Number of accounts
 
 #Create accounts
 cleos create account eosio auction $Public_key
