@@ -27,7 +27,7 @@ public:
     uint64_t i = 0;
     for(auto& iterator : pridx)
     {
-      if (i<N)
+      if ( i<N )
       {
         winners_price[i] = iterator.bid_price;
 	//Update last winner price every time
@@ -54,7 +54,7 @@ public:
     calwinners();
 
     //If the present bid price is too low, return 
-    if(last_winner_price >= bid_price)
+    if( last_winner_price >= bid_price )
     {
       //Need to bid 2 more dollars than the last_winner_price
       print("Sorry, your bid cannot be accepted. You need to bid at the price of ", last_winner_price + 2, " or higher. Thanks!");
@@ -89,7 +89,9 @@ public:
   void printwinners(name user)
   {
     require_auth(user);
+
     calwinners();
+
     for(auto i = 0; i != N; i++){
       print_f("{winner %}:{name: %, bid_price: %} | ", i+1, winners[i], winners_price[i]);
     }
