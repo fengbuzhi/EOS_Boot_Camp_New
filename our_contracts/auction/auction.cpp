@@ -51,7 +51,7 @@ public:
     require_auth(user);
     
     //Get the last winner price
-    int64_t last_winner_price = 0;
+    last_winner_price = 0;
     calwinners();
 
     //If the present bid price is too low, return 
