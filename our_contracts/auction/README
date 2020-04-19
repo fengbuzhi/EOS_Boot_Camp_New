@@ -1,0 +1,8 @@
+#README
+
+Using git pod, use chmod u+x to change the permission and add execution right.
+chmod u+x compile.sh
+chmod u+x bootstrap.sh
+chmod u+x demo.sh
+
+Just ignore all warnings as an user may have an account, or the files have been compiled, or an action is not allowed, etc.
