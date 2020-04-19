@@ -60,7 +60,6 @@ public:
       return;
     }
 
-    //FIXME: Now it should use the user_id to search, but here it uses bid_price, which is the primary key.
     auto iterator = bid_records.find(user.value);
     if ( iterator == bid_records.end() )
     {
