@@ -8,6 +8,7 @@ chmod u+x demo.sh
 
 #Use a lot of accounts
 #Using git pod, use chmod u+x to change the permission and add execution right.
+#FIXME:This is not working right now
 chmod u+x compile.sh
 chmod u+x bootstrap_new.sh
 chmod u+x demo_new.sh
