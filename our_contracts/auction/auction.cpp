@@ -56,7 +56,8 @@ public:
     //If the present bid price is too low, return 
     if(last_winner_price >= bid_price)
     {
-      print("Sorry, your bid cannot be accepted. You need to bid at the price of ", ceil(1.1*last_winner_price), " or higher. Thanks!");
+      //Need to bid 2 more dollars than the last_winner_price
+      print("Sorry, your bid cannot be accepted. You need to bid at the price of ", last_winner_price + 2, " or higher. Thanks!");
       return;
     }
 
