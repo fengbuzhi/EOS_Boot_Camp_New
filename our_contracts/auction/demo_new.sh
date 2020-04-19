@@ -10,7 +10,7 @@ do
   User=${Name}$i
   ID=$((Base_id+i))
   price=$(($RANDOM % 30 + 5)) #Generate a price between 5 to 30
-  cleos push action auction placebid '[$User, $ID, $price]' -p User@active
+  cleos push action auction placebid '[$User, $ID, $price]' -p $User@active
 done
 
 
