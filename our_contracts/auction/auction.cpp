@@ -1,10 +1,9 @@
 #include <math.h>
+
 #include <eosio/eosio.hpp>
 #include <eosio/print.hpp>
-//FIXME: move it to another file or change it to an input
-//# of winners (equal to the number of vailable football tickets for bidding)
-#include <auction.h>
 
+#include <auction.h>
 
 using namespace eosio;
 
