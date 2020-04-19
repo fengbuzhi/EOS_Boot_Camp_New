@@ -68,7 +68,7 @@ public:
 	row.user_name = user;
 	row.user_id = user_id;
 	row.bid_price = bid_price;
-    //limit the bid price to be less than 10000
+        //limit the bid price to be less than 10000
 	row.auxi_price = 10000-bid_price;
       });
     }
@@ -78,7 +78,7 @@ public:
 	row.user_name = user;
         row.user_id = user_id;
 	row.bid_price = bid_price;
-    //limit the bid price to be less than 10000   
+        //limit the bid price to be less than 10000   
 	row.auxi_price = 10000-bid_price;
       });
     }
@@ -111,10 +111,11 @@ public:
 
 private:
 
+  //Initialization of winner info
   int64_t winners_price[N] = {0};
   int64_t last_winner_price = {0};
   name winners[N];
-  //name winners[N] = {"VT"};
+  //name winners[N] = {name("VT")};
   
   struct [[eosio::table]] person
   {
