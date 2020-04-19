@@ -1,9 +1,14 @@
 #include <math.h>
 
 #include <eosio/eosio.hpp>
+#include <eosio/asset.hpp>
+#include <eosio/system.hpp>
+//#include <eosio.token/eosio.token.hpp>
 #include <eosio/print.hpp>
 
 #include <auction.h>
+
+#define VToken symbol("VTOKEN", 0)
 
 using namespace eosio;
 
@@ -29,7 +34,7 @@ public:
     {
       if ( i<N )
       {
-        winners_price[i] = iterator.bid_price;
+        winners_price[i] = iterator.bid_price.amount;
 	//Update last winner price every time
 	last_winner_price = winners_price[i];
 	winners[i] = iterator.user_name;
@@ -44,9 +49,18 @@ public:
 
   //Places a bid
   [[eosio::action]]
-  void placebid(name user, int64_t user_id, uint64_t bid_price)
+  void placebid(name user, int64_t user_id, asset bid_price)
   {
     require_auth(user);
+
+    auto sym = bid_price.symbol;
+
+    //stats statstable( get_self(), sym.code().raw() );
+    //auto existing = stastable.find( sys.code.raw() );
+    //check( existing != stastable.end(), "Unknown Token." );
+    //const auto& st = *existing;
+
+    check( bid_price.symbol == VToken, "symbol precision mismatch." );
     
     //Initialize the last winner price
     last_winner_price = 0;
@@ -54,7 +68,7 @@ public:
     calwinners();
 
     //If the present bid price is too low, return 
-    if( last_winner_price >= bid_price )
+    if( last_winner_price >= bid_price.amount )
     {
       //Need to bid 2 more dollars than the last_winner_price
       print("Sorry, your bid cannot be accepted. You need to bid at the price of ", last_winner_price + 2, " or higher. Thanks!");
@@ -67,9 +81,9 @@ public:
       bid_records.emplace(user, [&]( auto& row ) {
 	row.user_name = user;
 	row.user_id = user_id;
-	row.bid_price = bid_price;
+	row.bid_price.amount = bid_price.amount;
         //limit the bid price to be less than 10000
-	row.auxi_price = 10000-bid_price;
+	row.auxi_price = 10000-bid_price.amount;
       });
     }
     else
@@ -77,9 +91,9 @@ public:
       bid_records.modify(iterator, user, [&]( auto& row ) {
 	row.user_name = user;
         row.user_id = user_id;
-	row.bid_price = bid_price;
+	row.bid_price.amount = bid_price.amount;
         //limit the bid price to be less than 10000   
-	row.auxi_price = 10000-bid_price;
+	row.auxi_price = 10000-bid_price.amount;
       });
     }
   }
@@ -108,7 +122,7 @@ public:
 
     auto indx = 1;
     for(auto& iterator : pridx)
-      print_f("{bidder %}:{name: %, bid_price: %} | ", indx++, iterator.user_name, iterator.bid_price);
+      print_f("{bidder %}:{name: %, bid_price: %} | ", indx++, iterator.user_name, iterator.bid_price.amount);
   }
 
 private:
@@ -123,11 +137,12 @@ private:
   {
     name user_name;
     int64_t user_id;
-    uint64_t bid_price;
+    asset funds;
+    asset bid_price;
     //Use auxi_price to sort the table in desceding order
     uint64_t auxi_price;
     int64_t primary_key() const{ return user_name.value; };
-    uint64_t get_price() const{ return bid_price; };
+    uint64_t get_price() const{ return bid_price.symbol.raw(); };
     uint64_t get_auxi() const{ return auxi_price; };
   };
 
