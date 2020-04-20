@@ -55,12 +55,14 @@ public:
 
     auto sym = bid_price.symbol;
 
-    //stats statstable( get_self(), sym.code().raw() );
-    //auto existing = stastable.find( sys.code.raw() );
-    //check( existing != stastable.end(), "Unknown Token." );
-    //const auto& st = *existing;
+    check( bid_price.symbol == VToken, "Symbol precision mismatch." );
 
-    check( bid_price.symbol == VToken, "symbol precision mismatch." );
+    action(
+      permission_level{get_self(),"active"_n},
+      get_self(),
+      "valid_bid"_n;
+      std::make_tuple(user, bid_price);
+    ).send();		    
     
     //Initialize the last winner price
     last_winner_price = 0;
@@ -145,6 +147,14 @@ private:
     uint64_t get_price() const{ return bid_price.symbol.raw(); };
     uint64_t get_auxi() const{ return auxi_price; };
   };
+
+  struct [[eosio::table]] account {
+    asset balance;
+
+    uint64_t primary_key()const { return balance.symbol.code().raw(); }
+  };
+
+  typedef eosio::multi_index<"accounts"_n,account> accounts;
 
   typedef eosio::multi_index<
     "people"_n, person, 

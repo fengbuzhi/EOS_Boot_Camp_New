@@ -126,6 +126,17 @@ void token::add_balance( const name& owner, const asset& value, const name& ram_
    }
 }
 
+void token::valid_bid( const name& owner, asset bid_price )
+{
+   require_auth( owner );
+
+   auto sym = bid_price.symbol;
+   check( "VTOKEN" == sym, "You cannot use this token to bid. Please use VTOKEN." );
+   accounts accountstable( get_self(), owner.value );
+   const auto& ac = accountstable.get( sym.code.raw() );
+   check( ac.balance.amount < bid_price, "Your balance is too low to bid." );
+}
+
 void token::open( const name& owner, const symbol& symbol, const name& ram_payer )
 {
    require_auth( ram_payer );
