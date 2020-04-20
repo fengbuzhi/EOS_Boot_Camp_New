@@ -69,6 +69,13 @@ namespace eosio {
                         const name&    to,
                         const asset&   quantity,
                         const string&  memo );
+
+	 /**
+	  * Allows to check the balance
+	  */
+	 [[eosio::action]]
+         void checkbid( const name& owner, const asset& bid_price);
+
          /**
           * Allows `ram_payer` to create an account `owner` with zero balance for
           * token `symbol` at the expense of `ram_payer`.
@@ -116,6 +123,7 @@ namespace eosio {
          using transfer_action = eosio::action_wrapper<"transfer"_n, &token::transfer>;
          using open_action = eosio::action_wrapper<"open"_n, &token::open>;
          using close_action = eosio::action_wrapper<"close"_n, &token::close>;
+	 using checkbid_action = eosio::action_wrapper<"checkbid"_n, &token::checkbid>;
       private:
          struct [[eosio::table]] account {
             asset    balance;
@@ -136,7 +144,6 @@ namespace eosio {
 
          void sub_balance( const name& owner, const asset& value );
          void add_balance( const name& owner, const asset& value, const name& ram_payer );
-         void valid_bid( const name& owner, const asset& bid_price );
    };
 
 }

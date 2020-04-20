@@ -60,8 +60,8 @@ public:
     action(
       permission_level{get_self(),"active"_n},
       "eosio.token"_n,
-      "valid_bid"_n,
-      std::make_tuple(user, bid_price)
+      "checkbid"_n,
+      std::make_tuple( user, bid_price )
     ).send();		    
     
     //Initialize the last winner price

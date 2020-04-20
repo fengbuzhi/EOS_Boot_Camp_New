@@ -126,7 +126,7 @@ void token::add_balance( const name& owner, const asset& value, const name& ram_
    }
 }
 
-void token::valid_bid( const name& owner, const asset& bid_price )
+void token::checkbid( const name& owner, const asset& bid_price )
 {
    require_auth( owner );
 
