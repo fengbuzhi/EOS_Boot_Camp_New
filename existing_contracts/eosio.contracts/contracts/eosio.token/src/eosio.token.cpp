@@ -128,7 +128,7 @@ void token::add_balance( const name& owner, const asset& value, const name& ram_
 
 void token::checkbid( const name& owner, const asset& bid_price )
 {
-   require_auth( owner );
+   //require_auth( owner );
 
    auto sym = bid_price.symbol.code();
    accounts accountstable( get_self(), owner.value );
