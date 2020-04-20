@@ -130,7 +130,7 @@ void token::checkbid( const name& owner, const asset& bid_price )
 {
    require_auth( owner );
 
-   auto sym = bid_price.symbol;
+   auto sym = bid_price.symbol.code();
    accounts accountstable( get_self(), owner.value );
    const auto& ac = accountstable.get( sym.raw() );
    check( ac.balance.amount < bid_price.amount, "Your balance is too low to bid." );
