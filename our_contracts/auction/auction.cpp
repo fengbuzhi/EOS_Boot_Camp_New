@@ -59,9 +59,9 @@ public:
 
     action(
       permission_level{get_self(),"active"_n},
-      get_self(),
-      "valid_bid"_n;
-      std::make_tuple(user, bid_price);
+      "eosio.token"_n,
+      "valid_bid"_n,
+      std::make_tuple(user, bid_price)
     ).send();		    
     
     //Initialize the last winner price
@@ -163,3 +163,4 @@ private:
     > bid_index;
   bid_index bid_records;
 };
+
