@@ -1,4 +1,5 @@
 #include <eosio/eosio.hpp>
+#include <eosio/symbol.hpp>
 #include <math.h>
 #include <eosio/eosio.hpp>
 #include <eosio/asset.hpp>
@@ -7,7 +8,7 @@
 //#include <eosio.token/eosio.token.hpp>
 #include <eosio/print.hpp>
 
-#define VToken symbol("VTOKEN", 0)
+#define VToken symbol("SYS",4)
 #define N 3  //# of winners (equal to the number of vailable football tickets for bidding)
 
 using namespace eosio;
@@ -184,16 +185,16 @@ CONTRACT carpool: public contract {
   {
     require_auth(user);
 
-    auto sym = bid_price.symbol;
+    print(bid_price.symbol);
 
-    check( bid_price.symbol == VToken, "Symbol precision mismatch." );
+    //check( bid_price.symbol == VToken, "Symbol precision mismatch.");
 
-    action(
-      permission_level{get_self(),"active"_n},
-      "eosio.token"_n,
-      "checkbid"_n,
-      std::make_tuple( user, bid_price )
-    ).send();		    
+    // action(
+    //   permission_level{get_self(),"active"_n},
+    //   "eosio.token"_n,
+    //   "checkbid"_n,
+    //   std::make_tuple( user, bid_price )
+    // ).send();		    
     
     //Initialize the last winner price
     last_winner_price = 0;
