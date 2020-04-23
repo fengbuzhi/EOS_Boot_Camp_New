@@ -5,6 +5,10 @@
 #include <eosio/system.hpp>
 //#include <eosio.token/eosio.token.hpp>
 #include <eosio/print.hpp>
+#include <eosio/time.hpp>
+#include <eosio/public_key.hpp>
+
+#include <abieos_numeric.hpp>
 
 #include <auction.h>
 
@@ -128,17 +132,28 @@ public:
   }
 
   [[eosio::action]]
-  void distribute(const name user, std::string new_public_key)
+  void distribute(name issuer)
   {
-    check( user == "vtsport"_n, "Only Virginia Tech can distribute tickets!" );
-    action(
-      permission_level{get_self(), "active"_n};
-      get_self(),
-      "giveauth"_n,
-      std::make_tuple( user, new_public_key )
-    ).send();
-    create_buy_order( user, ticket_to_buy, order->price_ask );
-    _sell_orders.erase( order );
+    check( issuer == "vtsport"_n, "Only Virginia Tech can distribute tickets!" );
+    //action(
+    //  permission_level{get_self(), "active"_n};
+    //  get_self(),
+    //  "giveauth"_n,
+    //  std::make_tuple( user, new_public_key )
+    //).send();
+
+    //sort the list in descending order
+    auto pridx = bid_records.get_index<"byauxi"_n>();
+
+    auto indx = 1;
+    auto ticket_to_send = "ticket";
+    for(auto& iterator : pridx){
+      tiket_to_send = strcat("ticket", (char)indx);
+      update_holder( iterator.user_name, eosio::string_to_name(ticket_to_send), winners_price[indx-1] );
+      indx++;
+      if(indx > N)
+	break;
+    }
   }
 
   [[eosio::action]]
@@ -188,7 +203,7 @@ private:
   name winners[N];
   //name winners[N] = {name("VT")};
   
-  /***Structured data type***/
+  /***Structured data types***/
 
   struct permission_level_weight {
     eosio::permission_level permission;
@@ -204,6 +219,8 @@ private:
     eosio::public_key key;
     uint16_t          weight;
   }
+
+  /***Tables***/
 
   struct authority {
     uint32_t                             threshold = 0;
@@ -225,6 +242,16 @@ private:
     uint64_t get_auxi() const{ return auxi_price; };
   };
 
+  struct [[eosio::table]] ticket
+  {
+    name holder;
+    name ticket;
+    uint64_t ticket_price;
+
+    int64_t primary_key() const{ return holder.value };
+    uint64_t get_ticket() const{ return ticket.value };
+  }
+
   struct [[eosio::table]] account {
     asset balance;
 
@@ -239,5 +266,35 @@ private:
     indexed_by<"byauxi"_n, const_mem_fun<person, uint64_t, &person::get_auxi>>
     > bid_index;
   bid_index bid_records;
+
+  typedef eosio::multi_index<
+    "tickets"_n, ticket,
+    indexed_by<"byticket"_n, const_mem_fun<person, uint64_t, &ticket::get_ticket>>
+  > holder_indx;
+  holder_indx holder_records;
+
+  /***functions***/
+
+  void update_holder( name user, name ticket_to_send, uint64_t price ){
+    //Each person can only buy one ticket
+    auto iterator = holder_records.find(user.value);
+    if ( iterator == holder_records.end() )
+    {
+      holder_records.emplace(user, [&]( auto& row ) {
+	row.holder = user;
+	row.ticket = ticket_to_send;
+	row.ticket_price = price;
+      });
+    }
+    else
+    {
+      bid_records.modify(iterator, user, [&]( auto& row ) {
+	row.holder = user;
+	row.ticket = ticket_to_send;
+	row.ticket_price = price;
+      });
+    }
+  }
+
 };
 
