@@ -134,16 +134,6 @@ CONTRACT tradeticket : public eosio::contract {
      *                              A C T I O N S
      ***************************************************************************/
 
-    ACTION hello( void ) {
-      print("*** hello ***\n");
-      action(
-         permission_level{ "sarah"_n, "active"_n },
-         "eosio.token"_n,
-         "transfer"_n,
-         std::make_tuple( "sarah"_n, "eosio.token"_n, asset(10000, EOS_SYMBOL), std::string("payment from buyer") )
-      ).send();
-    }
-
 
     ACTION sellticket( name seller, name ticket_for_sale, asset price_ask, std::string stage) {
     
@@ -199,8 +189,6 @@ CONTRACT tradeticket : public eosio::contract {
                           std::string("inseason") )
       ).send();
 
-      // if seller receives money
-      // giveauth( order->ticket_for_sale, new_public_key );
       action(
          permission_level{ order->ticket_for_sale, "active"_n },
          get_self(),
@@ -256,4 +244,4 @@ CONTRACT tradeticket : public eosio::contract {
 };
 
 // specify the contract name, and export a public action: update
-EOSIO_DISPATCH( tradeticket, (hello)(sellticket)(buyticket)(giveauth) )
+EOSIO_DISPATCH( tradeticket, (sellticket)(buyticket)(giveauth) )
