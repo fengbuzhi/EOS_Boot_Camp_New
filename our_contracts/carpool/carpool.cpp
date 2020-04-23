@@ -7,7 +7,7 @@
 //#include <eosio.token/eosio.token.hpp>
 #include <eosio/print.hpp>
 
-#define VToken symbol("TNT", 0)
+#define VToken symbol("VTOKEN", 0)
 #define N 3  //# of winners (equal to the number of vailable football tickets for bidding)
 
 using namespace eosio;
@@ -35,6 +35,18 @@ CONTRACT carpool: public contract {
         //Passengers Review
         ACTION preview(){
             
+        }
+
+        ACTION login(name username){
+            require_auth(username);
+            users_table _users(get_self(), get_first_receiver().value);
+            // Create a record in the table if the player doesn't exist in our app yet
+            auto user_iterator = _users.find(username.value);
+            if (user_iterator == _users.end()) {
+                user_iterator = _users.emplace(username,  [&](auto& new_user) {
+                new_user.username = username;
+                });
+            } 
         }
 
         //Add a Ride
@@ -283,6 +295,16 @@ CONTRACT carpool: public contract {
   int64_t last_winner_price = {0};
   name winners[N];
   //name winners[N] = {name("VT")};
+
+    TABLE user_info {
+        name            username;
+        uint16_t        win_count = 0;
+        uint16_t        lost_count = 0;
+
+        auto primary_key() const { return username.value; }
+        };
+
+    typedef eosio::multi_index<name("users"), user_info> users_table;
   
   TABLE person
   {
