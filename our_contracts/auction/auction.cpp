@@ -8,7 +8,7 @@
 
 #include <auction.h>
 
-#define VToken symbol("VTOKEN", 0)
+#define VToken symbol("TNT", 0)
 
 using namespace eosio;
 
