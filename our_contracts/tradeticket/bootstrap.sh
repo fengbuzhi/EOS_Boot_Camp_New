@@ -1,4 +1,3 @@
-#!/bin/bash
 
 #Create account
 cleos create account eosio tradeticket EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV

@@ -65,12 +65,12 @@ cleos get table eosio.token bob accounts
 echo 'cleos get table tradeticket tradeticket sellorders'
 cleos get table tradeticket tradeticket sellorders
 
-echo 'cleos push action tradeticket sellaccount ["daniel","ticket1","6.0000 SYS"] -p ticket1'
-cleos push action tradeticket sellaccount '["daniel","ticket1","6.0000 SYS"]' -p ticket1
+echo 'cleos push action tradeticket sellticket ["daniel","ticket1","6.0000 SYS"] -p ticket1'
+cleos push action tradeticket sellticket '["daniel","ticket1","6.0000 SYS","inseason"]' -p ticket1
 
 
-echo 'cleos push action tradeticket sellaccount ["bob","ticket2","12.0000 SYS"] -p ticket2'
-cleos push action tradeticket sellaccount '["bob","ticket2","12.0000 SYS"]' -p ticket2
+echo 'cleos push action tradeticket sellticket ["bob","ticket2","12.0000 SYS"] -p ticket2'
+cleos push action tradeticket sellticket '["bob","ticket2","12.0000 SYS","inseason"]' -p ticket2
 
 
 sleep 1

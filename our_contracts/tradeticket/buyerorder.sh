@@ -10,8 +10,8 @@ owner -p sarah
 echo 'cleos get account sarah'
 cleos get account sarah
 
-echo 'cleos push action tradeticket buyaccount ["sarah","ticket1","EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"] -p sarah'
-cleos push action tradeticket buyaccount '["sarah","ticket1","EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"]' -p sarah
+echo 'cleos push action tradeticket buyticket ["sarah","ticket1","EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"] -p sarah'
+cleos push action tradeticket buyticket '["sarah","ticket1","EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"]' -p sarah
 sleep 1
 echo 'cleos get table tradeticket tradeticket sellorders'
 cleos get table tradeticket tradeticket sellorders
@@ -25,8 +25,8 @@ cleos get currency balance eosio.token bob SYS
 cleos get currency balance eosio.token sarah SYS
 
 
-echo 'cleos push action tradeticket buyaccount ["sarah","ticket2","EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"] -p sarah'
-cleos push action tradeticket buyaccount '["sarah","ticket2","EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"]' -p sarah
+echo 'cleos push action tradeticket buyticket ["sarah","ticket2","EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"] -p sarah'
+cleos push action tradeticket buyticket '["sarah","ticket2","EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"]' -p sarah
 sleep 1
 echo 'cleos get table tradeticket tradeticket sellorders'
 cleos get table tradeticket tradeticket sellorders
