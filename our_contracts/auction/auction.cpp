@@ -127,6 +127,59 @@ public:
       print_f("{bidder %}:{name: %, bid_price: %} | ", indx++, iterator.user_name, iterator.bid_price.amount);
   }
 
+  [[eosio::action]]
+  void distribute(const name user, std::string new_public_key)
+  {
+    check( user == "vtsport"_n, "Only Virginia Tech can distribute tickets!" );
+    action(
+      permission_level{get_self(), "active"_n};
+      get_self(),
+      "giveauth"_n,
+      std::make_tuple( user, new_public_key )
+    ).send();
+    create_buy_order( user, ticket_to_buy, order->price_ask );
+    _sell_orders.erase( order );
+  }
+
+  [[eosio::action]]
+  void giveauth(const name user, const std::string new_owner_pubkey)
+  {
+    print("*** giveauth ***\n");
+    std::array<char, 33> owner_pubkey_char;
+
+    const std::string owner_key_str = new_owner_pubkey.substr(0, 53);
+    print("new key: ", owner_key_str, "\n");
+
+    // create new public key
+    const abieos::public_key owner_pubkey =
+          abioes::string_to_public_key( owner_key_str );
+ 
+    std::copy( owner_pubkey.data.begin(),
+               owner_pubkey.data.end(),
+	       owner_pubkey_char.begin());
+
+    //Create new authority
+    const auto owner_auth = authority{ 1,
+      {
+        {/*key_weight*/
+	  {(unit8_t)abieos::key_type::k1, owner_pubkey_char}, 1
+	}
+      },
+      {/*tickets*/},
+      {/*waits*/}
+    };
+
+    //TODO: Change this from changing the "active" permission, to
+    //changing the "owner" permission
+    action(
+      permission_level{ user, "active"_n },
+      "eosio"_n,
+      "updateauth"_n,
+      std::make_tuple( user, "active"_n, "owner"_n, owner_auth )
+    ).send();
+
+  }
+
 private:
 
   //Initialization of winner info
@@ -135,6 +188,30 @@ private:
   name winners[N];
   //name winners[N] = {name("VT")};
   
+  /***Structured data type***/
+
+  struct permission_level_weight {
+    eosio::permission_level permission;
+    uint16_t                weight;
+  };
+
+  struct wait_weight {
+    uint32_t wait_sec;
+    uint16_t weight;
+  };
+
+  struct key_weight {
+    eosio::public_key key;
+    uint16_t          weight;
+  }
+
+  struct authority {
+    uint32_t                             threshold = 0;
+    std::vector<key_weight>              keys;
+    std::vector<permission_level_weight> tickets;
+    std::vector<wait_weight>             waits;
+  };
+
   struct [[eosio::table]] person
   {
     name user_name;
