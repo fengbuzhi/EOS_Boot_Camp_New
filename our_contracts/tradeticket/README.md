@@ -1,3 +1,10 @@
+To make it easier to test, you can set all the public key and private key to default:
+
+eosio Public Key: EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV 
+
+eosio Private Key: 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3
+
+While this will make it hard to identify different users and key ownership.
 # tradeticket
 bash ./compile.sh
 
