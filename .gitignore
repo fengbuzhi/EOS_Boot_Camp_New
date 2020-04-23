@@ -18,6 +18,7 @@ frontend/build
 #swap files
 *.swp
 */*.swp
+*.swo
 
 # misc
 .DS_Store
