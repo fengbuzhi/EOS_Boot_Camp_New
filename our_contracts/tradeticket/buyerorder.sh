@@ -18,9 +18,9 @@ echo 'cleos get account ticket1'
 cleos get account ticket1
 echo 'cleos get account ticket1'
 cleos get account ticket2
-cleos get currency balance eosio.token weicheng SYS
-cleos get currency balance eosio.token zejia SYS
-cleos get currency balance eosio.token aanuo SYS
+cleos get currency balance eosio.token weicheng VTOKEN
+cleos get currency balance eosio.token zejia VTOKEN
+cleos get currency balance eosio.token aanuo VTOKEN
 
 
 echo 'cleos push action tradeticket buyticket ["aanuo","ticket2","EOS5wNaiDJqWBFGYS4RB5nks7ZYf72przz2QPcHz46kJrEvccfGZZ"] -p aanuo'
@@ -34,6 +34,6 @@ echo 'cleos get account ticket1'
 cleos get account ticket1
 echo 'cleos get account ticket1'
 cleos get account ticket2
-cleos get currency balance eosio.token weicheng SYS
-cleos get currency balance eosio.token zejia SYS
-cleos get currency balance eosio.token aanuo SYS
+cleos get currency balance eosio.token weicheng VTOKEN
+cleos get currency balance eosio.token zejia VTOKEN
+cleos get currency balance eosio.token aanuo VTOKEN
