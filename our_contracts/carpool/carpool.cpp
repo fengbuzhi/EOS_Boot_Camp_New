@@ -24,11 +24,6 @@ class [[eosio::contract("carpool")]] carpool: public eosio::contract {
         
         //Methods Declaration
 
-        //Apply to use the system
-        ACTION createacc(){
-
-        }
-
         //Drivers Review.
 
         ACTION driverreview(){
@@ -53,7 +48,7 @@ class [[eosio::contract("carpool")]] carpool: public eosio::contract {
         }
 
         //Add a Ride
-        ACTION addpost(name user_name, string loc_desc, string loc_param, uint64_t car_size, string cost_trip){
+        ACTION addpost(name user_name, string loc_desc, string post_title,string loc_param, uint64_t car_size, string cost_trip){
             require_auth(user_name);
             carpool_index _cpool_index(get_self(), get_first_receiver().value);
 
@@ -63,6 +58,7 @@ class [[eosio::contract("carpool")]] carpool: public eosio::contract {
                 row.log_id = _cpool_index.available_primary_key();
                 row.loc_desc = loc_desc;
                 row.loc_param = loc_param;
+                row.post_title = post_title;
                 row.cost_jorn = cost_trip;
                 row.car_space = car_size;
                 row.delete_post = 0;
@@ -71,16 +67,20 @@ class [[eosio::contract("carpool")]] carpool: public eosio::contract {
             print("Trip Successfully Posted");
         }
 
-        ACTION editpost(name username, uint64_t carpoolid, string loc_desc){
+        ACTION editpost(name username, uint64_t carpoolid, string post_title, string loc_desc, string loc_param, uint64_t car_size, string cost_trip){
             //Edit Post Method
             require_auth(username);
             carpool_index _cpool_index(get_self(), get_first_receiver().value);
             auto itr = _cpool_index.find(carpoolid);
 
-            if(itr->username == username){
+            if(itr != _cpool_index.end()){
                 //It is my record. I can edit it
                 _cpool_index.modify(itr, username, [&](auto& row){
                     row.loc_desc = loc_desc;
+                    row.loc_param = loc_param;
+                    row.car_space = car_size;
+                    row.post_title = post_title;
+                    row.cost_jorn = cost_trip;
                 });
                 print("Your post has been edited");
             }
@@ -165,12 +165,13 @@ class [[eosio::contract("carpool")]] carpool: public eosio::contract {
             string loc_desc;
             string loc_param;
             string cost_jorn;
+            string post_title;
             uint64_t delete_post;
 
             auto primary_key() const {return log_id;}
             auto by_username() const {return username.value;}
         };
-        typedef multi_index <name("carpoolt"), carpoolog> carpool_index;
+        typedef multi_index <name("carpool"), carpoolog> carpool_index;
 
         TABLE joinride{
 
@@ -192,12 +193,5 @@ class [[eosio::contract("carpool")]] carpool: public eosio::contract {
         auto primary_key() const { return username.value; }
         };
         typedef eosio::multi_index<name("users"), user_info> users_table;
-     
-        TABLE account {
-          asset balance;
-
-          uint64_t primary_key()const { return balance.symbol.code().raw(); }
-        };
-        typedef eosio::multi_index<"accounts"_n,account> accounts;
 
 };
