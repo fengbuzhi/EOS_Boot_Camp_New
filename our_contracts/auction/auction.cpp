@@ -10,7 +10,7 @@
 
 //#include "abieos_numeric.hpp"
 
-#define VToken symbol("TNT", 0)
+#define VToken symbol("VTOKEN", 0)
 #define N 3  //# of winners (equal to the number of vailable football tickets for bidding)
 
 using namespace eosio;
@@ -254,8 +254,9 @@ public:
   }
 
   [[eosio::action]]
-  void buyticket(name user, name ticketinfo)
+  void buyticket(name user, name ticketinfo, asset bid_price)
   {
+
     //check( issuer == "vtsport"_n, "Only Virginia Tech can distribute tickets!" );
     //action(
     //  permission_level{get_self(), "active"_n};
@@ -266,7 +267,7 @@ public:
 
     require_auth(user);
 
-    bid_index _bid_records( get_self(), get_first_receiver().value) ;
+    bid_index _bid_records( get_self(), get_first_receiver().value );
 
     auto iterator = _bid_records.find(user.value);
 
@@ -277,15 +278,16 @@ public:
       updateholder( user, ticketinfo, iterator->bid_price.amount );
     //}
     
-    //action(
-    //  permission_level{user, "active"_n},
-    //  "eosio.token"_n,
-    //  "transfer"_n,
-    //  std::make_tuple( user,
-    //                   "vt"_n,
-    //                   iterator->bid_price.amount,
-    //                   std::string("Initial bidding payment") )
-    //).send();
+    //If using iterator->bid_price here, then not working due to a key right issue. Not sure of why
+    action(
+      permission_level{user, "active"_n},
+      "eosio.token"_n,
+      "transfer"_n,
+      std::make_tuple( user,
+                       "vt"_n,
+                       bid_price,
+                       std::string("Initial bidding payment") )
+    ).send();
   }
 
 };

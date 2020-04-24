@@ -1,4 +1,4 @@
-eosio-cpp -I /workspace/EOS_Boot_Camp_New/existing_contracts/eosio.contracts/contracts/eosio.token/include -o eosio.token.wasm /workspace/EOS_Boot_Camp_New/existing_contracts/eosio.contracts/contracts/eosio.token/src/eosio.token.cpp --abigen
+eosio-cpp -I /workspace/EOS_Boot_Camp_New/existing_contracts/eosio.contracts/contracts/eosio.token/include -o /workspace/EOS_Boot_Camp_New/existing_contracts/eosio.contracts/contracts/eosio.token/eosio.token.wasm /workspace/EOS_Boot_Camp_New/existing_contracts/eosio.contracts/contracts/eosio.token/src/eosio.token.cpp --abigen
 
 cleos create account eosio eosio.token EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
 cleos create account eosio vt EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
