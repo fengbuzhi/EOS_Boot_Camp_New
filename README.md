@@ -1,5 +1,11 @@
-This is the new repo for the EOS Boot Camp
+# VTRADE (A Token-based Blockchain System for Football Ticket Bidding and Trading at Virginia Tech)
+This is the repo for the VTrade team (Weicheng Xue, Zejia Jing and Aanuoluwapo Ojelade) in the 2020 EOS Boot Camp. This repo is aimed to:
 
-Owners: Weicheng Xue, Zejia Jing and Aanuoluwapo Ojelade
+1. Setting up a bidding system for the football ticket sales in the beginning of a season (strictly a game, but it can be extended to multiple games).
+2. Setting up a carpool system for the shared rides between strangers. This can help solve the traffic conjestion issue on a game day.
+3. Setting up an incentivised ticket trading system for the ticket sales among the VT community members. VT can get a small revenue every time when a deal occurs.
 
 Creation Date: 04/09/2020
+
+### Background
+As is known, hokies need to share public resources (football tickets, classes, parking spaces etc.) in the university due to resource limitations. If students already buy football tickets but cannot attend the game, they usually resolve to selling the tickets using eBay, Facebook or university BBS. eBay gets a high cut of revenue which is relatively high, while Facebook or BBS often requires a face-to-face trade to be safe. Furthermore, these websites may leak students’ personal information due to hack attacks. Human communities have ben relying on these unsecured centralized servers for many years and it causes so many problems, such as Facebook leaking data of 267 million users. Thus, a token-based blockchain (using smart contracts) auction marketplace will be designed to facilitate sales of shared resources for the hokie community. Our project will use the EOSIO framework to design a token-based blockchain system to address the above issues. The blockchain platform will be designed in a way to enable students or staff (1) bid the football tickets for a match in the beginning of a season, (2) share rides by posting ride requests on the chain, and (3) trade the tickets FREELY during the season. Also, VT football can get a small revenue every time when a deal happens. Our platform will ensure any hokie can trade freely, safely and easily according to their own preference. We believe that the blockchain platform can greatly improve the living of the VT community.
