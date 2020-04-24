@@ -11,7 +11,7 @@
 //#include "abieos_numeric.hpp"
 
 #define VToken symbol("VTOKEN", 0)
-#define N 3  //# of winners (equal to the number of vailable football tickets for bidding)
+#define N 3  //# of winners (equal to the number of vailable football tickets for bidding. It can be changed as needed)
 
 using namespace eosio;
 using namespace std;
