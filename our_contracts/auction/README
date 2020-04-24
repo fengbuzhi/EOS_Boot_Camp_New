@@ -2,13 +2,15 @@
 
 #Use a few accounts
 #Using git pod, use chmod u+x to change the permission and add execution right.
+chmod u+x token.sh
 chmod u+x compile.sh
 chmod u+x bootstrap.sh
 chmod u+x demo.sh
 
 #Use a lot of accounts
 #Using git pod, use chmod u+x to change the permission and add execution right.
-#FIXME:This is not working right now
+#FIXME:This is not working right now due to eosio issues
+chmod u+x token.sh
 chmod u+x compile.sh
 chmod u+x bootstrap_new.sh
 chmod u+x demo_new.sh
