@@ -8,7 +8,7 @@
 //#include "/workspace/EOS_Boot_Camp_New/our_contracts/tradeticket/eosio.token/include/eosio.token/eosio.token.hpp"
 //#include "/workspace/EOS_Boot_Camp_New/our_contracts/tradeticket/eosio.token/src/eosio.token.cpp"
 
-#define EOS_SYMBOL symbol("SYS", 4)
+#define VTOKEN symbol("VTOKEN", 0)
 #define RAMCORE_SYMBOL symbol("RAMCORE", 4)
 #define RAM_SYMBOL symbol("RAM", 0)
 
@@ -56,7 +56,7 @@ CONTRACT tradeticket : public eosio::contract {
     TABLE sell_order {
       name       ticket_for_sale;
       name       seller;
-      asset      price_ask{0, EOS_SYMBOL};
+      asset      price_ask{0, VTOKEN};
       time_point time_stamp;
 
       uint64_t primary_key() const { return ticket_for_sale.value; }
@@ -65,7 +65,7 @@ CONTRACT tradeticket : public eosio::contract {
     TABLE buy_order {
       name       ticket_for_sale;
       name       buyer;
-      asset      price_ask{0, EOS_SYMBOL};
+      asset      price_ask{0, VTOKEN};
       time_point time_stamp;
 
       uint64_t primary_key() const { return ticket_for_sale.value; }
@@ -149,7 +149,7 @@ CONTRACT tradeticket : public eosio::contract {
 
       eosio_assert( price_ask.is_valid(), "invalid price_ask" );
       eosio_assert( price_ask.amount > 0, "quantity must be positive" );
-      eosio_assert( price_ask.symbol == EOS_SYMBOL,
+      eosio_assert( price_ask.symbol == VTOKEN,
                     "symbol precision mismatch" );
 
       create_sell_order( seller, ticket_for_sale, price_ask );
