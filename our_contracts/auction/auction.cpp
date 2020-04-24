@@ -141,6 +141,18 @@ public:
   auction(name s, name code, datastream<const char*> ds): contract(s, code, ds) {}
 
   //Calculate winners
+
+
+    ACTION eraseme(){
+    //require_auth(get_self());
+  bid_index _users(get_self(), get_first_receiver().value);
+  auto msg_itr = _users.begin();
+
+        while (msg_itr != _users.end()) {
+            msg_itr = _users.erase(msg_itr);
+        }
+}
+
   [[eosio::action]]
   void calwinners( )
   {
@@ -181,7 +193,7 @@ public:
 
     action(
       permission_level{get_self(),"active"_n},
-      "eosio.token"_n,
+      "cqeykwxkfgdc"_n,
       "checkbid"_n,
       std::make_tuple( user, bid_price )
     ).send();		    
@@ -207,7 +219,7 @@ public:
       _bid_records.emplace(user, [&]( auto& row ) {
 	row.user_name = user;
 	row.user_id = user_id;
-	row.bid_price.amount = bid_price.amount;
+	row.bid_price = bid_price;
         //limit the bid price to be less than 10000
 	row.auxi_price = 10000-bid_price.amount;
       });
@@ -217,7 +229,7 @@ public:
       _bid_records.modify(iterator, user, [&]( auto& row ) {
 	row.user_name = user;
         row.user_id = user_id;
-	row.bid_price.amount = bid_price.amount;
+	row.bid_price = bid_price;
         //limit the bid price to be less than 10000   
 	row.auxi_price = 10000-bid_price.amount;
       });
