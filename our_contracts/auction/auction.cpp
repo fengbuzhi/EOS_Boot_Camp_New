@@ -82,7 +82,6 @@ private:
     "tickets"_n, ticket
     //indexed_by<"byticket"_n, const_mem_fun<person, int64_t, &ticket::get_ticket>>
     > holder_indx;
-  holder_indx holder_records;
 
   //Aanu Database Declaration
 
@@ -117,6 +116,7 @@ private:
 
   void updateholder( name user, name ticket_to_buy, uint64_t ticket_price ){
     //Each person can only buy one ticket
+    holder_indx holder_records(get_self(), get_first_receiver().value);
     auto iterator = holder_records.find(user.value);
     if ( iterator == holder_records.end() )
     {
@@ -138,7 +138,7 @@ private:
 public:
 
   //Constructor
-  auction(name s, name code, datastream<const char*> ds): contract(s, code, ds), holder_records(s, 0) {}
+  auction(name s, name code, datastream<const char*> ds): contract(s, code, ds) {}
 
   //Calculate winners
   [[eosio::action]]
