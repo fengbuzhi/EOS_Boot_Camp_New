@@ -1,2 +1,4 @@
-This contract should be deployed after the auction contract
+To Run this code, 
 
+First bash ./compile.sh
+Then bash ./bootstrap to create accounts - All account use the same public key
