@@ -310,6 +310,7 @@ public:
                        std::string("Initial bidding payment") )
     ).send();
 
+    //Change the key of the ticket as it has been traded
     action(
       permission_level{ ticketinfo, "active"_n },
       get_self(),
