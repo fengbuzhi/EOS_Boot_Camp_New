@@ -53,7 +53,7 @@ class [[eosio::contract("carpool")]] carpool: public eosio::contract {
         }
 
         //Add a Ride
-        ACTION addpost(name user_name, carpoolid, string loc_desc, string loc_param, uint64_t car_size, string cost_trip){
+        ACTION addpost(name user_name, string loc_desc, string loc_param, uint64_t car_size, string cost_trip){
             require_auth(user_name);
             carpool_index _cpool_index(get_self(), get_first_receiver().value);
 
