@@ -315,7 +315,7 @@ public:
       permission_level{ ticketinfo, "active"_n },
       get_self(),
       "giveauth"_n,
-      std::make_tuple( ticketinfo, new_public_key )
+      std::make_tuple( ticketinfo, new_public_key ) // Not sure whether it should be ticketinfo or user here.
     ).send();
   }
 
