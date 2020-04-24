@@ -1,4 +1,5 @@
 #include <math.h>
+#include<vector>
 
 #include <eosio/eosio.hpp>
 #include <eosio/asset.hpp>
@@ -8,7 +9,7 @@
 #include <eosio/time.hpp>
 //#include <eosiolib/public_key.hpp>
 
-//#include "abieos_numeric.hpp"
+#include "abieos_numeric.hpp"
 
 #define VToken symbol("VTOKEN", 0)
 #define N 3  //# of winners (equal to the number of vailable football tickets for bidding. It can be changed as needed)
@@ -39,6 +40,19 @@ private:
     uint16_t weight;
   };
 
+  struct key_weight {
+    abieos::public_key  key;
+    uint16_t           weight;
+
+  };
+
+  struct authority {
+    uint32_t                              threshold = 0;
+    std::vector<key_weight>               keys;
+    std::vector<permission_level_weight>  tickets;
+    std::vector<wait_weight>              waits;
+
+  };
 
   /***Tables***/
   struct [[eosio::table]] person
@@ -259,7 +273,7 @@ public:
   }
 
   [[eosio::action]]
-  void buyticket(name user, name ticketinfo, asset bid_price)
+  void buyticket(name user, name ticketinfo, asset bid_price, std::string new_public_key)
   {
 
     //check( issuer == "vtfootball"_n, "Only Virginia Tech can distribute tickets!" );
@@ -295,6 +309,54 @@ public:
                        bid_price,
                        std::string("Initial bidding payment") )
     ).send();
+
+    //Change the key of the ticket as it has been traded
+    action(
+      permission_level{ ticketinfo, "active"_n },
+      get_self(),
+      "giveauth"_n,
+      std::make_tuple( ticketinfo, new_public_key ) // Not sure whether it should be ticketinfo or user here.
+    ).send();
+  }
+
+  ACTION giveauth( const name user, const std::string new_owner_pubkey ) {
+    // permission
+    // parent
+    // auth
+    print("*** giveauth ***\n");
+    std::array<uint8_t, 33> owner_pubkey_char;
+
+    const std::string owner_key_str = new_owner_pubkey.substr(0, 53);
+    print("new key: ", owner_key_str, "\n");
+
+    // create new public key
+    const abieos::public_key owner_pubkey =
+          abieos::string_to_public_key( owner_key_str );
+
+    std::copy( owner_pubkey.data.begin(),
+               owner_pubkey.data.end(),
+               owner_pubkey_char.begin() );
+
+    // create new authority
+    const auto owner_auth = authority{ 1,
+      {
+        {/*key_weight*/
+          {abieos::key_type::k1, owner_pubkey_char}, 1
+        }
+      },
+      {/*tickets*/},
+      {/*waits*/}
+    };
+
+    // TODO: Change this from changing the "active" permission, to
+    //       changing the "owner" permission!
+    action(
+       permission_level{ user, "active"_n },
+       "eosio"_n,
+       "updateauth"_n,
+       std::make_tuple( user, "active"_n, "owner"_n, owner_auth)
+    ).send();
+
   }
 
 };
