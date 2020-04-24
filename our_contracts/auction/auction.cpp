@@ -269,7 +269,7 @@ public:
   void buyticket(name user, name ticketinfo, asset bid_price)
   {
 
-    //check( issuer == "vtsport"_n, "Only Virginia Tech can distribute tickets!" );
+    //check( issuer == "vtfootball"_n, "Only Virginia Tech can distribute tickets!" );
     //action(
     //  permission_level{get_self(), "active"_n};
     //  get_self(),
@@ -296,7 +296,7 @@ public:
       "eosio.token"_n, // For online demo/UI, change this to the contract where the eosio.token is set
       "transfer"_n,
       std::make_tuple( user,
-                       "vt"_n,
+                       "vtfootball"_n,
                        bid_price,
                        std::string("Initial bidding payment") )
     ).send();
