@@ -118,21 +118,14 @@ private:
     //Each person can only buy one ticket
     holder_indx holder_records(get_self(), get_first_receiver().value);
     auto iterator = holder_records.find(user.value);
-    if ( iterator == holder_records.end() )
-    {
-      holder_records.emplace(user, [&]( auto& row ) {
-	    row.holder = user;
-	    row.ticket = ticket_to_buy;
-	    row.ticket_price = ticket_price;
-      });
-    }
-    else {
-      holder_records.modify(iterator, user, [&]( auto& row ) {
-	    row.holder = user;
-        row.ticket = ticket_to_buy;
-        row.ticket_price = ticket_price;
-      });      
-    }
+
+    check( iterator == holder_records.end(), "You already have this ticket. You cannot buy it twice in the bidding stage" );  
+
+    holder_records.emplace(user, [&]( auto& row ) {
+          row.holder = user;
+          row.ticket = ticket_to_buy;
+          row.ticket_price = ticket_price;
+    });
   }
 
 public:
@@ -140,18 +133,18 @@ public:
   //Constructor
   auction(name s, name code, datastream<const char*> ds): contract(s, code, ds) {}
 
-  //Calculate winners
-
-
-    ACTION eraseme(){
+  //Eraser
+  ACTION eraseme(){
     //require_auth(get_self());
-  bid_index _users(get_self(), get_first_receiver().value);
-  auto msg_itr = _users.begin();
+    bid_index _users(get_self(), get_first_receiver().value);
+    auto msg_itr = _users.begin();
 
-        while (msg_itr != _users.end()) {
-            msg_itr = _users.erase(msg_itr);
-        }
-}
+    while (msg_itr != _users.end()) {
+      msg_itr = _users.erase(msg_itr);
+    }
+  }
+
+  //Calculate winners
 
   [[eosio::action]]
   void calwinners( )
@@ -279,12 +272,14 @@ public:
 
     require_auth(user);
 
+    calwinners();
+
     bid_index _bid_records( get_self(), get_first_receiver().value );
 
     auto iterator = _bid_records.find(user.value);
-
-    //Not sure why this is needed, but an test shows that we need it
-    calwinners();
+    check( iterator != _bid_records.end(), "You are not a bidder. You cannot buy a ticket" );
+    check( bid_price.amount >= winners_price[N-1], "You are not a winner. You cannot buy a ticket" );
+    check( iterator->bid_price.amount == bid_price.amount, "Use your bid price to pay" );
 
     //if ( iterator == _bid_records.end() ){
       updateholder( user, ticketinfo, iterator->bid_price.amount );
