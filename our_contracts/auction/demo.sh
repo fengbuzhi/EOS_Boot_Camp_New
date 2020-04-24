@@ -6,3 +6,5 @@ cleos push action auction placebid '["zejia", 222222222, "14 VTOKEN"]' -p zejia@
 
 cleos push action auction printbids '["weicheng"]' -p weicheng@active
 cleos push action auction printwinners '["weicheng"]' -p weicheng@active
+
+cleos push action auction buyticket '["zejia", "ticket1"]' -p zejia@active
