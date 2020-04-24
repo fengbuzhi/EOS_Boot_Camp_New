@@ -8,9 +8,9 @@ cleos push action auction placebid '["zejia", 222222222, "14 VTOKEN"]' -p zejia@
 cleos push action auction printbids '["weicheng"]' -p weicheng@active
 cleos push action auction printwinners '["weicheng"]' -p weicheng@active
 
-cleos push action auction buyticket '["weicheng", "ticket1", "10 VTOKEN"]' -p weicheng@active
-cleos push action auction buyticket '["aanuo", "ticket2", "12 VTOKEN"]' -p aanuo@active
-cleos push action auction buyticket '["zejia", "ticket3", "14 VTOKEN"]' -p zejia@active
+cleos push action auction buyticket '["weicheng", "ticket1", "10 VTOKEN", "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"]' -p weicheng@active
+cleos push action auction buyticket '["aanuo", "ticket2", "12 VTOKEN", "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"]' -p aanuo@active
+cleos push action auction buyticket '["zejia", "ticket3", "14 VTOKEN", "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"]' -p zejia@active
 
 echo "After buying a ticket"
 cleos get currency balance eosio.token weicheng VTOKEN
