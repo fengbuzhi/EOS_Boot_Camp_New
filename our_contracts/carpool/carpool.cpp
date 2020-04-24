@@ -1,20 +1,22 @@
 #include <math.h>
 
 #include <eosio/eosio.hpp>
-#include <eosio/symbol.hpp>
-#include <eosio/eosio.hpp>
 #include <eosio/asset.hpp>
 #include <eosio/system.hpp>
-#include <eosio/print.hpp>
 //#include <eosio.token/eosio.token.hpp>
+#include <eosio/print.hpp>
+#include <eosio/time.hpp>
+//#include <eosiolib/public_key.hpp>
 
-#define VToken symbol("VTOKEN",0)
-#define N 3  //# of winners (equal to the number of vailable football tickets for bidding)
+//#include "abieos_numeric.hpp"
+
+#define VToken symbol("VTOKEN", 0)
+#define N 3  //# of winners (equal to the number of vailable football tickets for bidding. It can be changed as needed)
 
 using namespace eosio;
 using namespace std;
 
-CONTRACT carpool: public contract {
+class [[eosio::contract("carpool")]] carpool: public eosio::contract {
 
     public:
         carpool(name receiver, name code, datastream<const char*> ds):
@@ -51,7 +53,7 @@ CONTRACT carpool: public contract {
         }
 
         //Add a Ride
-        ACTION addpost(name user_name, string loc_desc, string loc_param, uint64_t car_size, string cost_trip){
+        ACTION addpost(name user_name, carpoolid, string loc_desc, string loc_param, uint64_t car_size, string cost_trip){
             require_auth(user_name);
             carpool_index _cpool_index(get_self(), get_first_receiver().value);
 
