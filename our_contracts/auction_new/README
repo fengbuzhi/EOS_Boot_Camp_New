@@ -1,0 +1,87 @@
+#README
+
+#Use a few accounts
+#Using git pod, use chmod u+x to change the permission and add execution right.
+chmod u+x compile.sh
+chmod u+x bootstrap.sh
+chmod u+x demo.sh
+
+#Use a lot of accounts
+#Using git pod, use chmod u+x to change the permission and add execution right.
+#FIXME:This is not working right now
+chmod u+x compile.sh
+chmod u+x bootstrap_new.sh
+chmod u+x demo_new.sh
+
+Just ignore all warnings as an user may have an account, or the files have been compiled, or an action is not allowed, etc.
+
+
+To make it easier to test, you can set all the public key and private key to default:
+
+eosio Public Key: EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV 
+
+eosio Private Key: 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3
+
+While this will make it hard to identify different users and key ownership.
+# tradeticket
+bash ./compile.sh
+
+bash ./bootstrap.sh
+
+bash ./demo.sh
+
+bash ./sellerorder.sh
+
+bash ./buyerorder.sh
+Feature: 
+Prevent Balance Overdraw
+Prevent double sell the ticket
+Keep historical buyer information including price, buyer ID and time.
+
+VT football key pairs:
+EOS private key:
+5K4jpqb29PeDn9Qcw9a2a2qjxDNae7iwYiHNQmTbRd1TfofXbTr
+
+EOS public key:
+EOS7dJcV4RBZ9YBrQuMwCSSu1RYt1r2TFdrHUXpA7EVzyv6yj6Wg7
+
+
+weicheng's key pair: 
+EOS private key:
+5Kgg7LJpYrBaN7TPhGBYDxz2WjqAfYaZrv3RU17cCRW33XPauLE
+
+EOS public key:
+EOS7nXVLLrEda6Xr8FG3hxyc47LsC19Us9avhUK3uEPiPghdJPG2c
+
+zejia's key pair:
+EOS private key:
+5Jzs4M2jAmASyQmHtiaHLgEr2S9HJYn1gR758HG2xP8B5EWzTpL
+
+EOS public key:
+EOS8548cE8JioJT9ZRRdPqQ3KR6QmN6fH5ssE2ULKiBfbrmz7uYnX
+
+aanuo's key pair:
+EOS private key:
+5Jn28NWtbYAjYiBhYGtiyppGy42M5w1a6AkxCcSwCUusWBiQGv9
+
+EOS public key:
+EOS5wNaiDJqWBFGYS4RB5nks7ZYf72przz2QPcHz46kJrEvccfGZZ
+
+alice's key pair:
+EOS private key:
+5JTS7LvLuHkBPts63AcoMhFuuAyjmUp523dpzLD255bafj1LHDW
+
+EOS public key:
+EOS6s3BxLMpa14syK4oHDsvGxHT8p7LjBz1e5VzstXFAviqipfo2G
+
+bob's key pair:
+EOS private key:
+5KR6mpaTccr6VRXsqQbhes1EZQc1wGAKqjMn3fBMxJ21GDscPfn
+
+EOS public key:
+EOS53VzahSZQUqKcmvJVj59RYTV9q8JB2L6U4z39fRVNJ2mjLJVZ3
+
+
+
+The owner key cannot be changed. Make sure the integrity of the ticket.
+Other people cannot import and use that key. because they donnot have the private key.
