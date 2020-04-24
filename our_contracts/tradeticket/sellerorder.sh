@@ -41,9 +41,9 @@ echo "add tradeticket@eosio.code permission to ticket1@active"
 owner -p ticket1
 
 
-# cleos set account permission ticket2 active \
-# '{"threshold": 1,"keys": [{"key": "EOS8548cE8JioJT9ZRRdPqQ3KR6QmN6fH5ssE2ULKiBfbrmz7uYnX","weight": 1}],"accounts": [{"permission":{"actor":"tradeticket","permission":"eosio.code"},"weight":1}]}' \
-# owner -p ticket2
+cleos set account permission ticket2 active \
+'{"threshold": 1,"keys": [{"key": "EOS8548cE8JioJT9ZRRdPqQ3KR6QmN6fH5ssE2ULKiBfbrmz7uYnX","weight": 1}],"accounts": [{"permission":{"actor":"tradeticket","permission":"eosio.code"},"weight":1}]}' \
+owner -p ticket2
 
 
 echo 'weicheng will sell their ticket called ticket1 for 6 VTOKEN'
