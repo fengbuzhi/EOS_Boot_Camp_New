@@ -193,7 +193,7 @@ public:
 
     action(
       permission_level{get_self(),"active"_n},
-      "cqeykwxkfgdc"_n,
+      "eosio.token"_n, // For online demo/UI, change this to the contract where the eosio.token is set
       "checkbid"_n,
       std::make_tuple( user, bid_price )
     ).send();		    
@@ -293,7 +293,7 @@ public:
     //If using iterator->bid_price here, then not working due to a key right issue. Not sure of why
     action(
       permission_level{user, "active"_n},
-      "eosio.token"_n,
+      "eosio.token"_n, // For online demo/UI, change this to the contract where the eosio.token is set
       "transfer"_n,
       std::make_tuple( user,
                        "vt"_n,
