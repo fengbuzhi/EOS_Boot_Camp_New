@@ -179,16 +179,35 @@ CONTRACT tradeticket : public eosio::contract {
       print( order->seller, " is selling '", order->ticket_for_sale,
              "' to ", buyer, " for ", order->price_ask, "\n" );
 
+      // For incentivised trading.
+      eosio::asset revenue;
+      revenue.amount = 1;
+      revenue.symbol = VTOKEN;
+      auto money_to_seller = order->price_ask - revenue;
+
       action(
          permission_level{ buyer, "active"_n },
          "eosio.token"_n,
          "transfer"_n,
          std::make_tuple( buyer,
                           order->seller,
-                          order->price_ask,
+                          money_to_seller,
                           std::string("inseason") )
       ).send();
 
+      //Send this revenue to vtfootball
+      //Need to add an account for vtfootball and set eh right
+      action(
+         permission_level{ buyer, "active"_n },
+         "eosio.token"_n,
+         "transfer"_n,
+         std::make_tuple( buyer,
+                          "vtfootball"_n,
+                          revenue,
+                          std::string("revenue") )
+      ).send();
+
+      //Update the authority
       action(
          permission_level{ order->ticket_for_sale, "active"_n },
          get_self(),
