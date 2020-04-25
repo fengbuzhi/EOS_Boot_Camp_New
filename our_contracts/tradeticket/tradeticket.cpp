@@ -1,7 +1,6 @@
-#include <eosiolib/eosio.hpp>
-#include <eosiolib/asset.hpp>
-#include <eosiolib/time.hpp>
-#include <eosiolib/public_key.hpp>
+#include <eosio/eosio.hpp>
+#include <eosio/asset.hpp>
+#include <eosio/time.hpp>
 
 #include "abieos_numeric.hpp"
 
@@ -36,7 +35,7 @@ CONTRACT tradeticket : public eosio::contract {
     };
 
    struct key_weight {
-      eosio::public_key  key;
+      abieos::public_key  key;
       uint16_t           weight;
 
    };
@@ -82,16 +81,16 @@ CONTRACT tradeticket : public eosio::contract {
      *                            F U N C T I O N S
      ***************************************************************************/
 
-    time_point current_time_point() {
-      const static time_point ct{ microseconds{ static_cast<int64_t>( current_time() ) } };
-      return ct;
-    }
+    //time_point current_time_point() {
+    //  const static time_point ct{ microseconds{ static_cast<int64_t>( current_time() ) } };
+    //  return ct;
+    //}
 
     void create_sell_order( name  seller,
                             name  ticket_for_sale,
                             asset price_ask ) {
       /*sell_orders _sell_orders( _self, seller.value );*/
-      eosio_assert( _sell_orders.find( ticket_for_sale.value ) == _sell_orders.end(),
+      check( _sell_orders.find( ticket_for_sale.value ) == _sell_orders.end(),
                     "you are already selling this ticket" );
 
       /* contract ticket pays for ram */
@@ -99,7 +98,7 @@ CONTRACT tradeticket : public eosio::contract {
         s.ticket_for_sale = ticket_for_sale;
         s.seller           = seller;
         s.price_ask        = price_ask;
-        s.time_stamp       = current_time_point();
+        //s.time_stamp       = current_time_point();
       });
     }
 
@@ -108,7 +107,7 @@ CONTRACT tradeticket : public eosio::contract {
                             name  ticket_for_sale,
                             asset price_ask ) {
       /*buy_orders _buy_orders( _self, seller.value );*/
-      eosio_assert( _buy_orders.find( ticket_for_sale.value ) == _buy_orders.end(),
+      check( _buy_orders.find( ticket_for_sale.value ) == _buy_orders.end(),
                     "you are already buying this ticket" );
 
       /* contract ticket pays for ram */
@@ -116,7 +115,7 @@ CONTRACT tradeticket : public eosio::contract {
         s.ticket_for_sale = ticket_for_sale;
         s.buyer           = buyer;
         s.price_ask        = price_ask;
-        s.time_stamp       = current_time_point();
+        //s.time_stamp       = current_time_point();
       });
     }
 
@@ -139,17 +138,17 @@ CONTRACT tradeticket : public eosio::contract {
     
       require_auth( ticket_for_sale );
 
-      eosio_assert( stage == "inseason",
+      check( stage == "inseason",
                     "You can not in football season. You cannot trade your ticket" );
 
-      eosio_assert( is_account( ticket_for_sale ),
+      check( is_account( ticket_for_sale ),
                     "ticket_for_sale does not exist");
-      eosio_assert( seller != ticket_for_sale,
+      check( seller != ticket_for_sale,
                     "cannot sell your own ticket" );
 
-      eosio_assert( price_ask.is_valid(), "invalid price_ask" );
-      eosio_assert( price_ask.amount > 0, "quantity must be positive" );
-      eosio_assert( price_ask.symbol == VTOKEN,
+      check( price_ask.is_valid(), "invalid price_ask" );
+      check( price_ask.amount > 0, "quantity must be positive" );
+      check( price_ask.symbol == VTOKEN,
                     "symbol precision mismatch" );
 
       create_sell_order( seller, ticket_for_sale, price_ask );
@@ -161,18 +160,18 @@ CONTRACT tradeticket : public eosio::contract {
                        std::string stage) {
       require_auth( buyer );
 
-      eosio_assert( stage == "inseason",
+      check( stage == "inseason",
                     "You can not in football season. You cannot trade your ticket" );
 
-      eosio_assert( is_account( ticket_to_buy ),
+      check( is_account( ticket_to_buy ),
                     "ticket_for_sale does not exist");
-      eosio_assert( buyer != ticket_to_buy,
+      check( buyer != ticket_to_buy,
                     "cannot buy your own ticket" );
 
       // find ticket for sale / seller / price
       auto order = _sell_orders.find( ticket_to_buy.value );
 
-      eosio_assert( order != _sell_orders.end(),
+      check( order != _sell_orders.end(),
                     "could not find ticket for sale" );
 
       // buyer sends money (price) to seller
@@ -225,7 +224,7 @@ CONTRACT tradeticket : public eosio::contract {
       // parent
       // auth
       print("*** giveauth ***\n");
-      std::array<char, 33> owner_pubkey_char;
+      std::array<uint8_t, 33> owner_pubkey_char;
 
       const std::string owner_key_str = new_owner_pubkey.substr(0, 53);
       print("new key: ", owner_key_str, "\n");
@@ -242,7 +241,7 @@ CONTRACT tradeticket : public eosio::contract {
       const auto owner_auth = authority{ 1,
         {
           {/*key_weight*/
-            {(uint8_t)abieos::key_type::k1, owner_pubkey_char}, 1
+            {abieos::key_type::k1, owner_pubkey_char}, 1
           }
         },
         {/*tickets*/},
