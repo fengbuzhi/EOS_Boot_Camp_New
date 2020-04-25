@@ -177,8 +177,10 @@ cleos get table tradeticket tradeticket buyorders
 
 echo 'cleos get account ticket1'
 cleos get account ticket1
-echo 'cleos get account ticket1'
+echo 'cleos get account ticket2'
 cleos get account ticket2
 cleos get currency balance eosio.token weicheng VTOKEN
 cleos get currency balance eosio.token zejia VTOKEN
 cleos get currency balance eosio.token aanuo VTOKEN
+echo 'Get VT account balance to see whether it gets the revenue'
+cleos get currency balance eosio.token vtfootball VTOKEN
