@@ -1,3 +1,5 @@
 #!/bin/bash
+cd /workspace/EOS_Boot_Camp_New/our_contracts/auction
 
-eosio-cpp --abigen auction.cpp -o auction.wasm -I /workspace/EOS_Boot_Camp_New/existing_contracts/eosio.contracts/contracts/eosio.token/
+#Compile auction
+eosio-cpp --abigen auction.cpp -o auction.wasm

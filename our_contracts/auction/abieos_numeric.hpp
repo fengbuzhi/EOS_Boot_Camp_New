@@ -8,8 +8,6 @@
 #include <string>
 #include <string_view>
 
-using namespace eosio;
-
 namespace abieos {
 
 const char base58_chars[] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
@@ -33,14 +31,14 @@ std::array<uint8_t, size> base58_to_binary(std::string_view s) {
     for (auto& src_digit : s) {
         int carry = get_base58_map()[src_digit];
         if (carry < 0)
-            check(0, "invalid base-58 value");
+            eosio_assert(0, "invalid base-58 value");
         for (auto& result_byte : result) {
             int x = result_byte * 58 + carry;
             result_byte = x;
             carry = x >> 8;
         }
         if (carry)
-            check(0, "base-58 value is out of range");
+            eosio_assert(0, "base-58 value is out of range");
     }
     std::reverse(result.begin(), result.end());
     return result;
@@ -84,9 +82,8 @@ public_key string_to_public_key(std::string_view s) {
     } else if (s.size() >= 7 && s.substr(0, 7) == "PUB_R1_") {
         return string_to_key<public_key>(s.substr(7), key_type::r1, "R1");
     } else {
-        check(0, "unrecognized public key format");
+        eosio_assert(0, "unrecognized public key format");
     }
 }
 
 } // namespace abieos
-
