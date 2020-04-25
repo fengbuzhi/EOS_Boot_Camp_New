@@ -22,3 +22,6 @@ This contract is the contract for carpooling. It also has multiple multi-index t
 
 ### tradetickt
 This contract is the contract for trading tickets in-seasonal. It has sell_order and buy_order tables. Important actions include sellticket and buyticket and giveauth. Buyticket inlines to the eosio.token "transfer" and intra-code "giveauth" actions. Giveauth inlines to the eosio "updateauth" actions.
+
+### Frontend
+This is the link to the frontend. https://github.com/weich97/EOS_Boot_Camp_frontend
