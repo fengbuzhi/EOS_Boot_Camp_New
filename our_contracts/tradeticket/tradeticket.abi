@@ -1,0 +1,144 @@
+{
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT ",
+    "version": "eosio::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "buy_order",
+            "base": "",
+            "fields": [
+                {
+                    "name": "ticket_for_sale",
+                    "type": "name"
+                },
+                {
+                    "name": "buyer",
+                    "type": "name"
+                },
+                {
+                    "name": "price_ask",
+                    "type": "asset"
+                },
+                {
+                    "name": "time_stamp",
+                    "type": "time_point"
+                }
+            ]
+        },
+        {
+            "name": "buyticket",
+            "base": "",
+            "fields": [
+                {
+                    "name": "buyer",
+                    "type": "name"
+                },
+                {
+                    "name": "ticket_to_buy",
+                    "type": "name"
+                },
+                {
+                    "name": "new_public_key",
+                    "type": "string"
+                },
+                {
+                    "name": "stage",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "giveauth",
+            "base": "",
+            "fields": [
+                {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
+                    "name": "new_owner_pubkey",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "sell_order",
+            "base": "",
+            "fields": [
+                {
+                    "name": "ticket_for_sale",
+                    "type": "name"
+                },
+                {
+                    "name": "seller",
+                    "type": "name"
+                },
+                {
+                    "name": "price_ask",
+                    "type": "asset"
+                },
+                {
+                    "name": "time_stamp",
+                    "type": "time_point"
+                }
+            ]
+        },
+        {
+            "name": "sellticket",
+            "base": "",
+            "fields": [
+                {
+                    "name": "seller",
+                    "type": "name"
+                },
+                {
+                    "name": "ticket_for_sale",
+                    "type": "name"
+                },
+                {
+                    "name": "price_ask",
+                    "type": "asset"
+                },
+                {
+                    "name": "stage",
+                    "type": "string"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "buyticket",
+            "type": "buyticket",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "giveauth",
+            "type": "giveauth",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "sellticket",
+            "type": "sellticket",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "buyorders",
+            "type": "buy_order",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "sellorders",
+            "type": "sell_order",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

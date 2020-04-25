@@ -146,7 +146,8 @@ class [[eosio::contract("carpool")]] carpool: public eosio::contract {
 
         }
 
-        ACTION cancelride(){
+        ACTION cancelride(name username, uint64_t carpoolid){
+            
             //Cancel ride 
         }
 

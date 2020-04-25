@@ -1,9 +1,7 @@
-#include <eosio/eosio.hpp>
-#include <eosio/asset.hpp>
-#include <eosio/system.hpp>
-
-#include <eosio/print.hpp>
-#include <eosio/time.hpp>
+#include <eosiolib/eosio.hpp>
+#include <eosiolib/asset.hpp>
+#include <eosiolib/time.hpp>
+#include <eosiolib/public_key.hpp>
 
 #include "abieos_numeric.hpp"
 
@@ -44,7 +42,7 @@ class [[eosio::contract("auction")]] auction : public eosio::contract
     };
 
    struct key_weight {
-      abieos::public_key  key;
+      eosio::public_key  key;
       uint16_t           weight;
 
    };
@@ -79,16 +77,16 @@ class [[eosio::contract("auction")]] auction : public eosio::contract
      *                            F U N C T I O N S
      ***************************************************************************/
 
-    //time_point current_time_point() {
-    //  const static time_point ct{ microseconds{ static_cast<eosio::time_point>( current_time_point() ) } };
-    //  return ct;
-    //}
+    time_point current_time_point() {
+      const static time_point ct{ microseconds{ static_cast<int64_t>( current_time() ) } };
+      return ct;
+    }
 
     void create_bid_order( name  bider,
                             name  ticket_for_bid,
                             asset price_ask ) {
       /*bid_orders _bid_orders( _self, bider.value );*/
-      check( _bid_orders.find( ticket_for_bid.value ) == _bid_orders.end(),
+      eosio_assert( _bid_orders.find( ticket_for_bid.value ) == _bid_orders.end(),
                     "you are already biding this ticket" );
 
       /* contract ticket pays for ram */
@@ -96,7 +94,7 @@ class [[eosio::contract("auction")]] auction : public eosio::contract
         s.ticket_for_bid = ticket_for_bid;
         s.bider           = bider;
         s.price_ask        = price_ask;
-        //s.time_stamp       = current_time_point();
+        s.time_stamp       = current_time_point();
       });
     }
 
@@ -251,16 +249,16 @@ public:
                        std::string stage) {
       require_auth( "vtfootball"_n );
 
-      check( stage == "inseason",
+      eosio_assert( stage == "inseason",
                     "You can not in football season. You cannot trade your ticket" );
 
-      check( is_account( ticket_to_clear ),
+      eosio_assert( is_account( ticket_to_clear ),
                     "ticket_for_bid does not exist");
 
       // find ticket for bid / bider / price
       auto order = _bid_orders.find( ticket_to_clear.value );
 
-      check( order != _bid_orders.end(),
+      eosio_assert( order != _bid_orders.end(),
                     "could not find ticket for bid" );
 
       // order->bider sends money (price) to bider
@@ -294,7 +292,7 @@ public:
       // parent
       // auth
       print("*** giveauth ***\n");
-      std::array<uint8_t, 33> owner_pubkey_char;
+      std::array<char, 33> owner_pubkey_char;
 
       const std::string owner_key_str = new_owner_pubkey.substr(0, 53);
       print("new key: ", owner_key_str, "\n");
@@ -311,7 +309,7 @@ public:
       const auto owner_auth = authority{ 1,
         {
           {/*key_weight*/
-            {abieos::key_type::k1, owner_pubkey_char}, 1
+            {(uint8_t)abieos::key_type::k1, owner_pubkey_char}, 1
           }
         },
         {/*tickets*/},
