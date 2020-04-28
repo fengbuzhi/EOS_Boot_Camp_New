@@ -164,7 +164,7 @@ public:
   void calwinners( )
   {
 
-    bid_index _bid_records( get_self(), get_code().value) ;
+    bid_index _bid_records( get_self(), get_first_receiver().value) ;
 
     //Sort the list in descending order
     auto pridx = _bid_records.get_index<"byauxi"_n>();
@@ -218,7 +218,7 @@ public:
       return;
     }
 
-    bid_index _bid_records( get_self(), get_code().value) ;
+    bid_index _bid_records( get_self(), get_first_receiver().value) ;
 
     auto iterator = _bid_records.find(user.value);
     if ( iterator == _bid_records.end() )
@@ -350,7 +350,7 @@ public:
   {
     require_auth(user);
 
-    bid_index _bid_records( get_self(), get_code().value) ;
+    bid_index _bid_records( get_self(), get_first_receiver().value) ;
 
     //Sort the list in descending order
     auto pridx = _bid_records.get_index<"byauxi"_n>();
