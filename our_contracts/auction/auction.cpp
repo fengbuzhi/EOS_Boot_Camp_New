@@ -141,10 +141,10 @@ private:
   {
     name holder;
     name ticket;
-    uint64_t ticket_price;
+    asset ticket_price;
 
-    int64_t primary_key() const{ return holder.value; };
-    int64_t get_ticket() const{ return ticket.value; };
+    int64_t primary_key() const{ return ticket.value; };
+    //int64_t get_ticket() const{ return ticket.value; };
   };
 
   struct [[eosio::table]] account {
@@ -158,6 +158,12 @@ private:
     indexed_by<"byprice"_n, const_mem_fun<person, uint64_t, &person::get_price>>,
     indexed_by<"byauxi"_n, const_mem_fun<person, uint64_t, &person::get_auxi>>
     > bid_index;
+
+  typedef eosio::multi_index<
+    "tickets"_n, ticket
+    //indexed_by<"byticket"_n, const_mem_fun<ticket, int64_t, &ticket::get_ticket>>
+    > ticket_index; 
+
 public:
   //Calculate winners
   [[eosio::action]]
@@ -283,6 +289,31 @@ public:
          "giveauth"_n,
          std::make_tuple( order->ticket_for_bid, new_public_key )
       ).send();
+
+      auto user = order->bider;
+      ticket_index _ticket_records( get_self(), get_first_receiver().value) ;
+
+      //Store the ticket info for the bidding stage for searching purpose
+      //As every ticket can be only sold once in the bidding stage, so maybe
+      //we only use emplace here, as this clearticket cannot be executed again
+      //if the ticket is not on the list
+      //auto iterator = _ticket_records.find(user.value);
+      //if ( iterator == _ticket_records.end() )
+      {
+        _ticket_records.emplace(_self, [&]( auto& row ) {
+          row.holder = user;
+          row.ticket = order->ticket_for_bid;
+          row.ticket_price = order->price_ask;
+        });
+      }
+      //else
+      //{
+      //  _ticket_records.modify(iterator, user, [&]( auto& row ) {
+      //    row.holder = user;
+      //    row.ticket = order->ticket_for_bid;
+      //    row.ticket_price = order->price_ask;
+      //  });
+      //}
 
       _bid_orders.erase( order );
 

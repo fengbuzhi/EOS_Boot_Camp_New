@@ -25,7 +25,7 @@ cleos get account ticket1
 
 
 
-sleep 30
+sleep 3
 
 
 
@@ -53,10 +53,12 @@ cleos get table auction auction bidorders
 cleos get account ticket2
 
 
+echo "Check the ownership of tickets"
+cleos get table auction auction tickets
 
 
 
-sleep 30
+sleep 3
 
 
 
@@ -127,7 +129,7 @@ cleos get table tradeticket tradeticket sellorders
 
 
 
-sleep 30
+sleep 3
 
 
 
@@ -161,7 +163,7 @@ cleos get currency balance eosio.token aanuo VTOKEN
 
 
 
-sleep 30
+sleep 3
 
 
 
