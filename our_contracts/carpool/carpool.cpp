@@ -212,7 +212,7 @@ class [[eosio::contract("carpool")]] carpool: public eosio::contract {
             name ticketname;
 
             auto primary_key() const {return ticketname.value;}
-        }
+        };
         typedef eosio::multi_index<name("ticketinfo"), ticket_info>ticket_table;
 
 };
