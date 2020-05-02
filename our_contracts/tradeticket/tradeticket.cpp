@@ -52,6 +52,24 @@ CONTRACT tradeticket : public eosio::contract {
      *                                T A B L E S
      ***************************************************************************/
 
+    struct [[eosio::table]] ticket
+    {
+      name holder;
+      name ticket;
+      asset ticket_price;
+
+      int64_t primary_key() const{ return ticket.value; };
+      //int64_t get_ticket() const{ return ticket.value; };
+    };
+
+    struct [[eosio::table]] revenue
+    {
+      name vt_account;
+      asset total_revenues;
+
+      int64_t primary_key() const{ return vt_account.value; };
+    };
+
     TABLE sell_order {
       name       ticket_for_sale;
       name       seller;
@@ -70,6 +88,9 @@ CONTRACT tradeticket : public eosio::contract {
       uint64_t primary_key() const { return ticket_for_sale.value; }
     };
 
+    typedef eosio::multi_index< "tickets"_n, ticket > ticket_index;
+
+    typedef eosio::multi_index< "revenues"_n, revenue > revenue_index;
 
     typedef eosio::multi_index< "sellorders"_n, sell_order > sell_orders;
     sell_orders _sell_orders;
@@ -206,6 +227,27 @@ CONTRACT tradeticket : public eosio::contract {
                           std::string("revenue") )
       ).send();
 
+      revenue_index _revenue_records( get_self(), get_first_receiver().value );
+
+      //Add the revenue to the _revenue_records table so that we can show the
+      //total revenues vtfootball get through trading at the tradeticket stage
+      name vt_account = "vtfootball"_n;
+      auto iterator = _revenue_records.find(vt_account.value);
+      if ( iterator == _revenue_records.end() )
+      {
+	_revenue_records.emplace(_self, [&](  auto& row ) {
+          row.vt_account = vt_account;
+	  row.total_revenues = revenue;
+	});
+      }
+      else
+      {
+        _revenue_records.modify(iterator, _self, [&]( auto& row ) {
+          //row.vt_account = vt_account;
+	  row.total_revenues += revenue;
+	});
+      }
+
       //Update the authority
       action(
          permission_level{ order->ticket_for_sale, "active"_n },
@@ -214,6 +256,20 @@ CONTRACT tradeticket : public eosio::contract {
          std::make_tuple( order->ticket_for_sale, new_public_key )
       ).send();
       create_buy_order( buyer, ticket_to_buy, order->price_ask);
+
+      ticket_index _ticket_records( get_self(), get_first_receiver().value);
+
+      //Store the ticket info for the trading stage for searching purpose.
+      //Every time when there is a trade, add this trade info to the
+      //_ticket_records table
+      {
+        _ticket_records.emplace(_self, [&]( auto& row ) {
+          row.holder = buyer;
+          row.ticket = ticket_to_buy;
+          row.ticket_price = order->price_ask;
+        });
+      }
+
       _sell_orders.erase( order );
 
 

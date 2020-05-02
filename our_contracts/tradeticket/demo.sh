@@ -18,3 +18,8 @@ cleos get currency balance eosio.token ticket1 VTOKEN
 cleos push action eosio.token transfer '[ "vtfootball", "ticket2", "10 VTOKEN", "m" ]' -p vtfootball@active
 cleos get currency balance eosio.token ticket2 VTOKEN
 
+echo "Check the ownership of tickets"
+cleos get table tradeticket tradeticket tickets
+
+echo "Chech the total revenues vtfootball get from trading"
+cleos get table tradeticket tradeticket revenues
