@@ -154,6 +154,19 @@ class [[eosio::contract("carpool")]] carpool: public eosio::contract {
         ACTION edithopride(){
             //Edit specifics of rides you agree to share
         }
+
+        //Store new Ticket name created
+
+        ACTION saveticket(name ticketname){
+            ticket_table _ticket_index(get_self(), get_first_receiver().value);
+            auto itr = _ticket_index.find(ticketname.value);
+
+            if (itr == _ticket_index.end()) {
+                itr = _ticket_index.emplace(ticketname,  [&](auto& new_user) {
+                new_user.ticketname = ticketname;
+                });
+            } 
+        }
     
     //Database Declaration
     private:
@@ -194,5 +207,12 @@ class [[eosio::contract("carpool")]] carpool: public eosio::contract {
         auto primary_key() const { return username.value; }
         };
         typedef eosio::multi_index<name("users"), user_info> users_table;
+
+        TABLE ticket_info{
+            name ticketname;
+
+            auto primary_key() const {return ticketname.value;}
+        }
+        typedef eosio::multi_index<name("ticketinfo"), ticket_info>ticket_table;
 
 };
