@@ -186,3 +186,9 @@ cleos get currency balance eosio.token zejia VTOKEN
 cleos get currency balance eosio.token aanuo VTOKEN
 echo 'Get VT account balance to see whether it gets the revenue'
 cleos get currency balance eosio.token vtfootball VTOKEN
+
+echo "Check the ownership of tickets"
+cleos get table tradeticket tradeticket tickets
+
+echo "Chech the total revenues vtfootball get from trading"
+cleos get table tradeticket tradeticket revenues

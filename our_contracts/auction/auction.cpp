@@ -249,8 +249,33 @@ public:
     
   }
 
+  //update the onwership of a ticket if there is a trade
+  [[eosio::action]]
+  void updateticket(name user, name ticket_update, asset ticket_price)
+  {
+    ticket_index _ticket_records( get_self(), get_first_receiver().value) ;
 
+    auto iterator = _ticket_records.find(ticket_update.value);
+    if ( iterator == _ticket_records.end() )
+    {
+      //Not sure the first argument should be user or _self
+      _ticket_records.emplace(_self, [&]( auto& row ) {
+        row.holder = user;
+        row.ticket = ticket_update;
+        row.ticket_price = ticket_price;
+      });
+    }
+    else
+    {
+      _ticket_records.modify(iterator, _self, [&]( auto& row ) {
+        row.holder = user;
+        row.ticket = ticket_update;
+        row.ticket_price = ticket_price;
+      });
+    }
+  }
 
+  using updateticket_action = action_wrapper<"updateticket"_n, &auction::updateticket>;
 
  ACTION clearticket(   name ticket_to_clear,
                        std::string new_public_key, 
@@ -297,7 +322,7 @@ public:
       //As every ticket can be only sold once in the bidding stage, so maybe
       //we only use emplace here, as this clearticket cannot be executed again
       //if the ticket is not on the list
-      //auto iterator = _ticket_records.find(user.value);
+      //auto iterator = _ticket_records.find(ticket_to_clear.value);
       //if ( iterator == _ticket_records.end() )
       {
         _ticket_records.emplace(_self, [&]( auto& row ) {

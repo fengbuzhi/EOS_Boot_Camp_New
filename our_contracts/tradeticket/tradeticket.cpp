@@ -140,6 +140,16 @@ CONTRACT tradeticket : public eosio::contract {
       });
     }
 
+    //Update the ownership if there is a trade
+    void ownership(name user, name ticket, asset ticket_price)
+    {
+      action(
+	permission_level{ user, "active"_n },
+	"auction"_n,
+	"updateticket"_n,
+	std::make_tuple( user, ticket, ticket_price )
+      ).send();
+    }
 
   public:
     using contract::contract;
@@ -153,7 +163,6 @@ CONTRACT tradeticket : public eosio::contract {
     /****************************************************************************
      *                              A C T I O N S
      ***************************************************************************/
-
 
     ACTION sellticket( name seller, name ticket_for_sale, asset price_ask, std::string stage) {
     
@@ -257,18 +266,21 @@ CONTRACT tradeticket : public eosio::contract {
       ).send();
       create_buy_order( buyer, ticket_to_buy, order->price_ask);
 
-      ticket_index _ticket_records( get_self(), get_first_receiver().value);
+      ownership(buyer, ticket_to_buy, order->price_ask);
 
-      //Store the ticket info for the trading stage for searching purpose.
-      //Every time when there is a trade, add this trade info to the
-      //_ticket_records table
-      {
-        _ticket_records.emplace(_self, [&]( auto& row ) {
-          row.holder = buyer;
-          row.ticket = ticket_to_buy;
-          row.ticket_price = order->price_ask;
-        });
-      }
+      //No need to do this as the buyorders table can be used to do the following stuff
+      //ticket_index _ticket_records( get_self(), get_first_receiver().value);
+
+      ////Store the ticket info for the trading stage for searching purpose.
+      ////Every time when there is a trade, add this trade info to the
+      ////_ticket_records table
+      //{
+      //  _ticket_records.emplace(_self, [&]( auto& row ) {
+      //    row.holder = buyer;
+      //    row.ticket = ticket_to_buy;
+      //    row.ticket_price = order->price_ask;
+      //  });
+      //}
 
       _sell_orders.erase( order );
 
