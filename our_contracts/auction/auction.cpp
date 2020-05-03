@@ -417,4 +417,4 @@ public:
   }
 };
 
-EOSIO_DISPATCH(auction, (placebid)(printbids)(printwinners)(clearticket)(giveauth) )
+EOSIO_DISPATCH(auction, (placebid)(printbids)(printwinners)(clearticket)(giveauth)(updateticket) )
