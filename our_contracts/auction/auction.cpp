@@ -11,7 +11,7 @@
 //#include "/workspace/EOS_Boot_Camp_New/our_contracts/auction/eosio.token/src/eosio.token.cpp"
 
 #define VTOKEN symbol("VTOKEN", 0)
-#define N 3  //# of winners (equal to the number of vailable football tickets for bidding)
+#define N 1  //# of winners (everytime it only allows 1 winner)
 #define RAMCORE_SYMBOL symbol("RAMCORE", 4)
 #define RAM_SYMBOL symbol("RAM", 0)
 
