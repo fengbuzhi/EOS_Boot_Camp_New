@@ -88,6 +88,7 @@ CONTRACT tradeticket : public eosio::contract {
       uint64_t primary_key() const { return ticket_for_sale.value; }
     };
 
+    //ticket_index should not be used
     typedef eosio::multi_index< "tickets"_n, ticket > ticket_index;
 
     typedef eosio::multi_index< "revenues"_n, revenue > revenue_index;
@@ -128,8 +129,8 @@ CONTRACT tradeticket : public eosio::contract {
                             name  ticket_for_sale,
                             asset price_ask ) {
       /*buy_orders _buy_orders( _self, seller.value );*/
-      check( _buy_orders.find( ticket_for_sale.value ) == _buy_orders.end(),
-                    "you are already buying this ticket" );
+      //check( _buy_orders.find( ticket_for_sale.value ) == _buy_orders.end(),
+      //              "you are already buying this ticket" );
 
       /* contract ticket pays for ram */
       auto order = _buy_orders.emplace( _self, [&]( auto& s ) {
