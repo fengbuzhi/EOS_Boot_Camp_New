@@ -29,6 +29,10 @@ cleos push action eosio.token transfer '[ "vtfootball", "zejia", "200 VTOKEN", "
 
 cleos set account permission auction active --add-code
 
+cleos set account permission vtfootball active \
+'{"threshold": 1,"keys": [{"key": "EOS7dJcV4RBZ9YBrQuMwCSSu1RYt1r2TFdrHUXpA7EVzyv6yj6Wg7","weight": 1}],"accounts": [{"permission":{"actor":"auction","permission":"eosio.code"},"weight":1}]}' \
+owner -p vtfootball
+
 #Deploy the contract 
 cleos set contract auction . --abi auction.abi -p auction@active
 
