@@ -14,6 +14,7 @@ cd /home/aanu/workdirectory/eosio.cdt/bootcamp/EOS_Boot_Camp_New/our_contracts/a
 cleos create account eosio auction EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
 cleos create account eosio weicheng EOS7nXVLLrEda6Xr8FG3hxyc47LsC19Us9avhUK3uEPiPghdJPG2c
 cleos create account eosio zejia EOS8548cE8JioJT9ZRRdPqQ3KR6QmN6fH5ssE2ULKiBfbrmz7uYnX
+cleos create account eosio tradeticket EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
 
 cd /home/aanu/workdirectory/eosio.cdt/bootcamp/EOS_Boot_Camp_New/existing_contracts/eosio.contracts/contracts/eosio.token
 cleos create account eosio eosio.token EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
