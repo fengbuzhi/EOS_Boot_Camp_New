@@ -81,11 +81,12 @@ CONTRACT tradeticket : public eosio::contract {
 
     TABLE buy_order {
       name       ticket_for_sale;
+      uint64_t   log_id;
       name       buyer;
       asset      price_ask{0, VTOKEN};
       time_point time_stamp;
-
-      uint64_t primary_key() const { return ticket_for_sale.value; }
+       auto primary_key() const {return log_id;}
+    //   uint64_t primary_key() const { return ticket_for_sale.value; }
     };
 
     //ticket_index should not be used
@@ -129,12 +130,11 @@ CONTRACT tradeticket : public eosio::contract {
                             name  ticket_for_sale,
                             asset price_ask ) {
       /*buy_orders _buy_orders( _self, seller.value );*/
-      //check( _buy_orders.find( ticket_for_sale.value ) == _buy_orders.end(),
-      //              "you are already buying this ticket" );
 
       /* contract ticket pays for ram */
       auto order = _buy_orders.emplace( _self, [&]( auto& s ) {
         s.ticket_for_sale = ticket_for_sale;
+        s.log_id = _buy_orders.available_primary_key();
         s.buyer           = buyer;
         s.price_ask        = price_ask;
         //s.time_stamp       = current_time_point();
