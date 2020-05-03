@@ -342,6 +342,15 @@ public:
 
       _bid_orders.erase( order );
 
+      //Delete all the info in the _bid_records, as the next bidding round will
+      //start
+      bid_index _bid_records( get_self(), get_first_receiver().value) ;
+
+      auto it = _bid_records.begin();
+      while(it != _bid_records.end())
+      {
+	it = _bid_records.erase(it);
+      }
 
     }
 
